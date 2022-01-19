@@ -5,7 +5,7 @@ Go to [LolEsports](https://lolesports.com/) and find your api-key, paste it insi
 # Todo
 ## GoogleCalendarService.InsertOrUpdateEvent
 - Usecase tested: Requires event.Id and evenId to be the same.
-- Usecase untested: Change event.Id
+- Usecase untested: Change of eventId
 ## GoogleCalendarService
 - Calendar.InsertOrUpdate
 
