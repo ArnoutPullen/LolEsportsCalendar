@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LolEsportsCalendar", "LolEsportsCalendar\LolEsportsCalendar.csproj", "{CCC0DDA8-2B4A-45A1-AF80-2C8646ED747E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LolEsportsApiClient", "LolEsportsApiClient\LolEsportsApiClient.csproj", "{5F29631C-16FD-4CB4-94ED-CBB7E8E66AB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoogleCalendarApiClient", "GoogleCalendarApiClient\GoogleCalendarApiClient.csproj", "{3AAD04B3-66C3-4B0C-8CB2-A0B46B0B44BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCC0DDA8-2B4A-45A1-AF80-2C8646ED747E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC0DDA8-2B4A-45A1-AF80-2C8646ED747E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC0DDA8-2B4A-45A1-AF80-2C8646ED747E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC0DDA8-2B4A-45A1-AF80-2C8646ED747E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F29631C-16FD-4CB4-94ED-CBB7E8E66AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F29631C-16FD-4CB4-94ED-CBB7E8E66AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F29631C-16FD-4CB4-94ED-CBB7E8E66AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F29631C-16FD-4CB4-94ED-CBB7E8E66AB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AAD04B3-66C3-4B0C-8CB2-A0B46B0B44BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AAD04B3-66C3-4B0C-8CB2-A0B46B0B44BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AAD04B3-66C3-4B0C-8CB2-A0B46B0B44BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AAD04B3-66C3-4B0C-8CB2-A0B46B0B44BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8AE3B969-E045-40CE-8973-F7AA373A9588}
+	EndGlobalSection
+EndGlobal
