@@ -1,6 +1,6 @@
 ﻿# Setup
 Follow [.NET quickstart](https://developers.google.com/calendar/api/quickstart/dotnet#step_2_set_up_the_sample) for GoogleCalendarAPI.
-Go to [LolEsports] and find your api-key, paste it inside lolesports-credentials.json
+Go to [LolEsports](https://lolesports.com/) and find your api-key, paste it inside lolesports-credentials.json
 
 # Todo
 ## GoogleCalendarService.InsertOrUpdateEvent
