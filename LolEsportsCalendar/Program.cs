@@ -1,71 +1,82 @@
-﻿using Google.Apis.Calendar.v3.Data;
-using GoogleCalendarApiClient;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Calendar.v3;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
 using GoogleCalendarApiClient.Services;
-using LolEsportsApiClient.Models;
 using LolEsportsApiClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LolEsportsCalendar
 {
+	class Config
+	{
+		
+	}
+
 	class Program
 	{
-		static GoogleCalendarService _googleCalendarService = new GoogleCalendarService();
-		static LolEsportsService _lolEsportsService = new LolEsportsService();
-
-		static void Main(string[] args)
+		static async Task Main(string[] args)
 		{
-			// Google Calendar API
-			// TestDuplicatedEvents();
+			ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+			var configuration = configurationBuilder.AddJsonFile("appsettings.json").Build();
+			
+			var serviceCollection = new ServiceCollection();
+			serviceCollection.AddSingleton<ConsoleApp>();
 
-			// Lolesports API
-			_lolEsportsService.ImportMissingCalendars().GetAwaiter().GetResult();
-			_lolEsportsService.ImportEventsForSelectedCalendars();
-			// _lolEsportsService.ImportEventsForAllCalendars().GetAwaiter().GetResult();
-			// _lolEsportsService.ImportEventsForLeague("LEC").GetAwaiter().GetResult();
+			await ConfigureServices(serviceCollection, configuration);
 
-			Console.ReadLine();
+			var serviceProvider = serviceCollection.BuildServiceProvider();
+
+			var consoleApp = serviceProvider.GetRequiredService<ConsoleApp>();
+			await consoleApp.RunAsync();
 		}
 
-		static void TestDuplicatedEvents()
+		public async static Task ConfigureServices(IServiceCollection services, IConfiguration configuration)
 		{
-			// Clear calendar
-			string calendarId = _googleCalendarService.FindCalendarId("LEC");
-			// ClearCalendar(calendarId);
+			var userCredential = await GetUserCredentialAsync();
 
-			// test duplicates
-			Event @event = new Event()
+			services.AddSingleton(_ => new CalendarService(new BaseClientService.Initializer()
 			{
-				// Id = "107597929688619119",
-				ICalUID = "107597929688619119",
-				Summary = "Test",
-				Start = new EventDateTime()
-				{
-					DateTime = DateTime.Now
-				},
-				End = new EventDateTime()
-				{
-					DateTime = DateTime.Now
-				}
-			};
+				HttpClientInitializer = userCredential,
+				ApplicationName = "LolEsportsCalendar"
+			}));
 
-			EsportEvent esportEvent = new EsportEvent()
-			{
-				// Id = "107597929688619119",
-				Match = new Match()
-				{
-					Id = "107597929688619119"
-				},
-				StartTime = DateTimeOffset.Now
-			};
-			// var newEvent = _eventsService.Insert(@event, calendarId);
-			// Convert EsportEvent to Event
-			Event _event = _googleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
+			services.AddSingleton<GoogleCalendarService>();
+			services.AddSingleton<LolEsportsService>();
+			services.AddHttpClient<LolEsportsClient>((httpClient) => {
+				var lolEsportsConfig = configuration.GetSection("LolEsports");
 
-			var newEvent = _googleCalendarService.InsertOrUpdateEvent(_event, calendarId, esportEvent.Match.Id);
-			Console.WriteLine(newEvent.Summary);
+				httpClient.BaseAddress = new Uri(lolEsportsConfig.GetValue<string>("BaseUrl"));
+				httpClient.DefaultRequestHeaders.Add("x-api-key", lolEsportsConfig.GetValue<string>("ApiKey"));
+			});
+
+			services.AddSingleton<CalendarListService>();
+			services.AddSingleton<CalendarsService>();
+			services.AddSingleton<EventsService>();
 		}
+
+		static async Task<UserCredential> GetUserCredentialAsync()
+		{
+			using var stream =
+				new FileStream("credentials.json", FileMode.Open, FileAccess.Read);
+
+			// The file token.json stores the user's access and refresh tokens, and is created
+			// automatically when the authorization flow completes for the first time.
+			GoogleClientSecrets googleClientSecrets = await GoogleClientSecrets.FromStreamAsync(stream);
+
+			return await GoogleWebAuthorizationBroker.AuthorizeAsync(
+				googleClientSecrets.Secrets,
+				new string[] { CalendarService.Scope.Calendar, CalendarService.Scope.CalendarEvents },
+				"user",
+				CancellationToken.None,
+				new FileDataStore("token.json", true));
+		}
+
 	}
 }

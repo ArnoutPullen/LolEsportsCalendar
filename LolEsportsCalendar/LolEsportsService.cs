@@ -17,12 +17,13 @@ namespace LolEsportsCalendar
 		};
 		private readonly Dictionary<string, string> leagueLookup = new Dictionary<string, string>();
 
-		public LolEsportsClient _lolEsportsClient = new LolEsportsClient();
-		public GoogleCalendarService _googleCalendarService = new GoogleCalendarService();
+		public LolEsportsClient _lolEsportsClient;
+		public GoogleCalendarService _googleCalendarService;
 
-		public LolEsportsService()
+		public LolEsportsService(GoogleCalendarService googleCalendarService, LolEsportsClient lolEsportsClient)
 		{
-			BuildLeagueLookup().GetAwaiter().GetResult();
+			_googleCalendarService = googleCalendarService;
+			_lolEsportsClient = lolEsportsClient;
 		}
 
 		public async Task<List<League>> GetLeagues()
@@ -108,6 +109,8 @@ namespace LolEsportsCalendar
 
 		public void ImportEventsForSelectedCalendars()
 		{
+			BuildLeagueLookup().GetAwaiter().GetResult();
+
 			try
 			{
 				foreach (var selectedLeague in selectedLeagues)

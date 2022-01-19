@@ -14,18 +14,8 @@ namespace LolEsportsApiClient
     {
 		private readonly HttpClient _httpClient;
 
-		public LolEsportsClient()
+		public LolEsportsClient(HttpClient httpClient)
 		{
-            HttpClient httpClient  = new HttpClient();
-			httpClient.BaseAddress = new Uri("https://esports-api.lolesports.com");
-
-            using (StreamReader streamReader = new StreamReader("lolesports-credentials.json"))
-            {
-                string json = streamReader.ReadToEnd();
-                LolEsportsClientSecrets secrets = JsonConvert.DeserializeObject<LolEsportsClientSecrets>(json);
-                httpClient.DefaultRequestHeaders.Add("x-api-key", secrets.ApiKey);
-            }
-
 		    _httpClient = httpClient;
 		}
 

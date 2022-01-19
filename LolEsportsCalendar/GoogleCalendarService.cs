@@ -18,16 +18,15 @@ namespace LolEsportsCalendar
 			"Worlds"
 		};
 
-		private GoogleCalendarClient _googleCalendarClient = new GoogleCalendarClient();
 		private CalendarsService _calendarsService;
 		private CalendarListService _calendarListService;
 		private EventsService _eventsService;
 
-		public GoogleCalendarService()
+		public GoogleCalendarService(CalendarsService calendarsService, CalendarListService calendarListService, EventsService eventsService)
 		{
-			_calendarsService = new CalendarsService(_googleCalendarClient.calendarService);
-			_calendarListService = new CalendarListService(_googleCalendarClient.calendarService);
-			_eventsService = new EventsService(_googleCalendarClient.calendarService);
+			_calendarsService = calendarsService;
+			_calendarListService = calendarListService;
+			_eventsService = eventsService;
 
 			BuildCalendarLookup();
 		}
