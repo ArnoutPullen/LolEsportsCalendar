@@ -81,7 +81,6 @@ namespace LolEsportsCalendar
 			catch (Exception exception)
 			{
 				Console.WriteLine(exception.Message);
-				throw;
 			}
 		}
 
@@ -106,6 +105,22 @@ namespace LolEsportsCalendar
 			{
 				Console.WriteLine(exception.Message);
 			}
+		}
+
+		public void ImportEventsForSelectedCalendars()
+		{
+			try
+			{
+				foreach (var selectedLeague in selectedLeagues)
+				{
+					ImportEventsForLeague(selectedLeague).GetAwaiter().GetResult();
+				}
+			}
+			catch (Exception exception)
+			{
+				Console.WriteLine(exception.Message);
+			}
+			Console.WriteLine();
 		}
 
 		public async Task ImportEventsForLeague(string leagueName)
@@ -140,6 +155,7 @@ namespace LolEsportsCalendar
 			{
 				Console.WriteLine(exception.Message);
 			}
+			Console.WriteLine("Events imported for league {0}", leagueName);
 		}
 	}
 }

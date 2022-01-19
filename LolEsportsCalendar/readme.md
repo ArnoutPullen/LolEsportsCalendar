@@ -6,6 +6,8 @@ Go to [LolEsports](https://lolesports.com/) and find your api-key, paste it insi
 ## GoogleCalendarService.InsertOrUpdateEvent
 - Usecase tested: Requires event.Id and evenId to be the same.
 - Usecase untested: Change event.Id
+## GoogleCalendarService
+- Calendar.InsertOrUpdate
 
 ## Caching
 - Leagues caching LeagueId=>LeagueName

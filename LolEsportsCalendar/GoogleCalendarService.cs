@@ -146,7 +146,7 @@ namespace LolEsportsCalendar
 
 			if (newEvent != null)
 			{
-				Console.WriteLine("Created event {0}", newEvent.Summary);
+				Console.WriteLine("Created event {0} in calendar {1}", newEvent.Summary, calendarId);
 			}
 			else
 			{
@@ -181,8 +181,7 @@ namespace LolEsportsCalendar
 				// ICalUID = esportEvent.Match.Id,
 				Start = new EventDateTime { DateTime = esportEvent.StartTime.UtcDateTime },
 				End = new EventDateTime { DateTime = esportEvent.StartTime.UtcDateTime },
-				// Summary = esportEvent.Match.Teams[0].Code + " vs " + esportEvent.Match.Teams[1].Code
-				Summary = "Test"
+				Summary = esportEvent.Match.Teams[0].Code + " vs " + esportEvent.Match.Teams[1].Code
 			};
 
 			return @event;

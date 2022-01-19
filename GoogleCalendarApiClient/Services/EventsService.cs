@@ -40,7 +40,7 @@ namespace GoogleCalendarApiClient.Services
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine(exception.Message);
+				// Console.WriteLine(exception.Message);
 			}
 			
 			return @event;
