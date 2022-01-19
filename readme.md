@@ -6,3 +6,11 @@ Click the links below to add the calendar to your own.
 
 ## Calendar not visible on iPhone
 - Check the [following link](https://calendar.google.com/calendar/u/0/syncselect) and resync the calendar.
+
+# Support
+Let [me know](https://github.com/ArnoutPullen/LolEsportsCalendar/issues/new?title=Feature Request: New Calendar) if you would like more calendars.
+
+# References
+- https://lolesports.com/
+- https://developers.google.com/calendar/api/v3/reference/
+- https://developers.google.com/resources/api-libraries/documentation/calendar/v3/csharp/latest/namespaceGoogle_1_1Apis_1_1Calendar_1_1v3_1_1Data.html

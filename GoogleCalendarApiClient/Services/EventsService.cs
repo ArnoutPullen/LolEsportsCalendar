@@ -1,8 +1,6 @@
 ﻿using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GoogleCalendarApiClient.Services
 {
@@ -38,7 +36,7 @@ namespace GoogleCalendarApiClient.Services
 				EventsResource.GetRequest getRequest = _service.Events.Get(calendarId, eventId);
 				@event = getRequest.Execute();
 			}
-			catch (Exception exception)
+			catch (Exception)
 			{
 				// Console.WriteLine(exception.Message);
 			}

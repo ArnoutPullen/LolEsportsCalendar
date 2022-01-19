@@ -1,8 +1,5 @@
 ﻿using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using static Google.Apis.Calendar.v3.CalendarListResource;
 
 namespace GoogleCalendarApiClient.Services
@@ -32,7 +29,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
 		public CalendarListEntry InsertCalendarList(CalendarListEntry calendar)
 		{
-			CalendarListResource.InsertRequest insertRequest = _service.CalendarList.Insert(calendar);
+			InsertRequest insertRequest = _service.CalendarList.Insert(calendar);
 			var calendarListEntry = insertRequest.Execute();
 
 			return calendarListEntry;

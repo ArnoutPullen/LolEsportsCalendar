@@ -1,8 +1,5 @@
 ﻿using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GoogleCalendarApiClient.Services
 {

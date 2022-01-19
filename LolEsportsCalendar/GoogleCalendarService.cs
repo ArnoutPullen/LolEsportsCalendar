@@ -4,7 +4,6 @@ using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LolEsportsCalendar
 {

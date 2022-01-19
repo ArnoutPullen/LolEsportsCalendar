@@ -1,15 +1,17 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Calendar.v3;
-using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
-using GoogleCalendarApiClient.Services;
 using System;
 using System.IO;
 using System.Threading;
 
 namespace GoogleCalendarApiClient
 {
+    public class GoogleCalendarClientOptions {
+        public UserCredential UserCredential {get;set;}
+    }
+
 	public class GoogleCalendarClient
     {
         // If modifying these scopes, delete your previously saved credentials
@@ -44,85 +46,6 @@ namespace GoogleCalendarApiClient
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
-        }
-
-        public void Testing()
-        {
-            /**
-              * Calendar
-              */
-            var calendarsService = new CalendarsService(calendarService);
-
-            Calendar calendar = new Calendar
-            {
-                Id = "98767991302996019",
-                Summary = "LEC",
-                Description = "LEC / EUROPE",
-                // ETag = "Test",
-                // Kind = "Test",
-                // Location = "Test",
-                // TimeZone = "Europe/Amsterdam"
-            };
-
-            var singleCalendar = calendarsService.ViewCalendar(calendar.Id);
-            Console.WriteLine("View single calendar {0}", singleCalendar.Summary);
-
-            var newCalendar = calendarsService.InsertCalendar(calendar);
-            Console.WriteLine("Created new calendar {0}", newCalendar.Summary);
-
-			/**
-             * CalendarList
-             */
-			CalendarListService calendarListService = new CalendarListService(calendarService);
-            CalendarListEntry calendarListEntry = new CalendarListEntry
-            {
-                // Id = "98767991302996019",
-                Summary = "LEC"
-            };
-
-            // View
-            CalendarList calendarList = calendarListService.ViewCalendarList();
-            foreach (var c in calendarList.Items)
-            {
-                Console.WriteLine("{0} - {1}", c.Id, c.Summary);
-            }
-
-            // Insert
-            CalendarListEntry newCalendarListEntry = calendarListService.InsertCalendarList(calendarListEntry);
-            Console.WriteLine(newCalendarListEntry);
-
-            // PrintUpcomingEvents();
-        }
-
-        public void PrintUpcomingEvents()
-        {
-            // Define parameters of request.
-            EventsResource.ListRequest request = calendarService.Events.List("primary");
-            request.TimeMin = DateTime.Now;
-            request.ShowDeleted = false;
-            request.SingleEvents = true;
-            request.MaxResults = 10;
-            request.OrderBy = EventsResource.ListRequest.OrderByEnum.StartTime;
-
-            // List events.
-            Events events = request.Execute();
-            Console.WriteLine("Upcoming events:");
-            if (events.Items != null && events.Items.Count > 0)
-            {
-                foreach (var eventItem in events.Items)
-                {
-                    string when = eventItem.Start.DateTime.ToString();
-                    if (String.IsNullOrEmpty(when))
-                    {
-                        when = eventItem.Start.Date;
-                    }
-                    Console.WriteLine("{0} ({1})", eventItem.Summary, when);
-                }
-            }
-            else
-            {
-                Console.WriteLine("No upcoming events found.");
-            }
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LolEsportsApiClient.Models
 {
-    public partial class Match
+	public partial class Match
     {
         [JsonProperty("id")]
         public string Id { get; set; }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -25,13 +24,8 @@ namespace LolEsportsApiClient
                 string json = streamReader.ReadToEnd();
                 LolEsportsClientSecrets secrets = JsonConvert.DeserializeObject<LolEsportsClientSecrets>(json);
                 httpClient.DefaultRequestHeaders.Add("x-api-key", secrets.ApiKey);
-                Console.WriteLine(secrets);
             }
 
-            // httpClient.DefaultRequestHeaders.Add("x-api-key", "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z");
-			// httpClient.DefaultRequestHeaders.Accept.Clear();
-			// httpClient.DefaultRequestHeaders.Accept.Add(
-			// 	new MediaTypeWithQualityHeaderValue("application/json"));
 		    _httpClient = httpClient;
 		}
 
@@ -84,9 +78,9 @@ namespace LolEsportsApiClient
 
             queryString.Add("hl", "en-GB");
 
-            foreach (var x in query)
+            foreach (var item in query)
             {
-                queryString.Add(x.Key, x.Value);
+                queryString.Add(item.Key, item.Value);
             }
 
             return '?' + queryString.ToString();
