@@ -11,19 +11,23 @@ namespace LolEsportsCalendar
 {
 	public class LolEsportsService
 	{
+		private readonly List<string> selectedLeagues = new List<string>
+		{
+			"LEC",
+			"European Masters",
+			"Worlds"
+		};
 		private readonly Dictionary<string, string> leagueLookup = new Dictionary<string, string>();
 
 		public LolEsportsClient _lolEsportsClient;
 		public GoogleCalendarService _googleCalendarService;
 		private ILogger<LolEsportsService> _logger;
-		private LolEsportsOptions _options;
 
-		public LolEsportsService(GoogleCalendarService googleCalendarService, LolEsportsClient lolEsportsClient, ILogger<LolEsportsService> logger, IOptions<LolEsportsOptions> options)
+		public LolEsportsService(GoogleCalendarService googleCalendarService, LolEsportsClient lolEsportsClient, ILogger<LolEsportsService> logger)
 		{
 			_googleCalendarService = googleCalendarService;
 			_lolEsportsClient = lolEsportsClient;
 			_logger = logger;
-			_options = options.Value;
 		}
 
 		public async Task<List<League>> GetLeaguesAsync()
@@ -63,7 +67,8 @@ namespace LolEsportsCalendar
 
 				foreach (var league in leagues)
 				{
-					if (SkipLeague(league.Name))
+					// Skip unselected leagues
+					if (!selectedLeagues.Contains(league.Name))
 					{
 						continue;
 					}
@@ -87,16 +92,17 @@ namespace LolEsportsCalendar
 		{
 			try
 			{
-				var leagues = await GetLeaguesAsync();
+				var leauges = await GetLeaguesAsync();
 
-				foreach (League league in leagues)
+				foreach (League leauge in leauges)
 				{
-					if (SkipLeague(league.Name))
+					// Skip unselected leagues
+					if (!selectedLeagues.Contains(leauge.Name))
 					{
 						continue;
 					}
 
-					ImportEventsForLeagueAsync(league.Name).GetAwaiter().GetResult();
+					ImportEventsForLeagueAsync(leauge.Name).GetAwaiter().GetResult();
 				}
 			}
 			catch (Exception exception)
@@ -105,15 +111,15 @@ namespace LolEsportsCalendar
 			}
 		}
 
-		public async Task ImportEventsForSelectedCalendarsAsync()
+		public async void ImportEventsForSelectedCalendarsAsync()
 		{
 			await BuildLeagueLookupAsync();
 
 			try
 			{
-				foreach (var calendar in _options.Calendars)
+				foreach (var selectedLeague in selectedLeagues)
 				{
-					await ImportEventsForLeagueAsync(calendar);
+					await ImportEventsForLeagueAsync(selectedLeague);
 				}
 			}
 			catch (Exception exception)
@@ -138,7 +144,8 @@ namespace LolEsportsCalendar
 
 				foreach (EsportEvent esportEvent in events)
 				{
-					if (SkipLeague(esportEvent.League.Name))
+					// Skip unselected leagues
+					if (!selectedLeagues.Contains(esportEvent.League.Name))
 					{
 						continue;
 					}
@@ -156,26 +163,6 @@ namespace LolEsportsCalendar
 			}
 
 			_logger.LogInformation("Events imported for league {0}", leagueName);
-		}
-
-		public bool SkipLeague(string leagueName)
-		{
-			// By default skip league
-			bool contains = true;
-
-			// Don't skip leagues if calendars not set in options
-			if (_options.Calendars == null) {
-				return false;
-			}
-
-			foreach (string calendar in _options.Calendars)
-			{
-				if (leagueName == calendar) {
-					contains = false;
-				}
-			}
-
-			return contains;
 		}
 	}
 }
