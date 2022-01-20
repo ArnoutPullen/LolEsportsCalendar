@@ -19,31 +19,31 @@ namespace LolEsportsApiClient
 		    _httpClient = httpClient;
 		}
 
-        public async Task<List<League>> GetLeagues()
+        public async Task<List<League>> GetLeaguesAsync()
         {
-            var leaguesResponseData = await GetData<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString());
+            var leaguesResponseData = await GetDataAsync<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString());
 
             return leaguesResponseData.Leagues;
         }
 
-        public async Task<List<EsportEvent>> GetSchedule()
+        public async Task<List<EsportEvent>> GetScheduleAsync()
         {
-            var leaguesResponseData = await GetData<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString());
+            var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString());
 
             return leaguesResponseData.Schedule.Events;
         }
 
-        public async Task<List<EsportEvent>> GetScheduleByLeague(string leagueId)
+        public async Task<List<EsportEvent>> GetScheduleByLeagueAsync(string leagueId)
         {
             Dictionary<string, string> query = new Dictionary<string, string>();
             query.Add("leagueId", leagueId);
 
-            var leaguesResponseData = await GetData<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query));
+            var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query));
 
             return leaguesResponseData.Schedule.Events;
         }
 
-        private async Task<T> GetData<T>(string path)
+        private async Task<T> GetDataAsync<T>(string path)
         {
             var response = await _httpClient.GetAsync(path);
 

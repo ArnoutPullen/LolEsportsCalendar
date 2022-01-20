@@ -30,13 +30,13 @@ namespace LolEsportsCalendar
 			_logger = logger;
 		}
 
-		public async Task<List<League>> GetLeagues()
+		public async Task<List<League>> GetLeaguesAsync()
 		{
 			List<League> leagues = null;
 
 			try
 			{
-				leagues = await _lolEsportsClient.GetLeagues();
+				leagues = await _lolEsportsClient.GetLeaguesAsync();
 			}
 			catch (Exception exception)
 			{
@@ -46,9 +46,9 @@ namespace LolEsportsCalendar
 			return leagues;
 		}
 
-		public async Task BuildLeagueLookup()
+		public async Task BuildLeagueLookupAsync()
 		{
-			var leagues = await GetLeagues();
+			var leagues = await GetLeaguesAsync();
 
 			if (leagues != null)
 			{
@@ -59,11 +59,11 @@ namespace LolEsportsCalendar
 			}
 		}
 
-		public async Task ImportMissingCalendars()
+		public async Task ImportMissingCalendarsAsync()
 		{
 			try
 			{
-				var leagues = await GetLeagues();
+				var leagues = await GetLeaguesAsync();
 
 				foreach (var league in leagues)
 				{
@@ -88,11 +88,11 @@ namespace LolEsportsCalendar
 			}
 		}
 
-		public async Task ImportEventsForAllCalendars()
+		public async Task ImportEventsForAllCalendarsAsync()
 		{
 			try
 			{
-				var leauges = await GetLeagues();
+				var leauges = await GetLeaguesAsync();
 
 				foreach (League leauge in leauges)
 				{
@@ -102,7 +102,7 @@ namespace LolEsportsCalendar
 						continue;
 					}
 
-					ImportEventsForLeague(leauge.Name).GetAwaiter().GetResult();
+					ImportEventsForLeagueAsync(leauge.Name).GetAwaiter().GetResult();
 				}
 			}
 			catch (Exception exception)
@@ -113,13 +113,13 @@ namespace LolEsportsCalendar
 
 		public void ImportEventsForSelectedCalendars()
 		{
-			BuildLeagueLookup().GetAwaiter().GetResult();
+			BuildLeagueLookupAsync().GetAwaiter().GetResult();
 
 			try
 			{
 				foreach (var selectedLeague in selectedLeagues)
 				{
-					ImportEventsForLeague(selectedLeague).GetAwaiter().GetResult();
+					ImportEventsForLeagueAsync(selectedLeague).GetAwaiter().GetResult();
 				}
 			}
 			catch (Exception exception)
@@ -129,7 +129,7 @@ namespace LolEsportsCalendar
 			}
 		}
 
-		public async Task ImportEventsForLeague(string leagueName)
+		public async Task ImportEventsForLeagueAsync(string leagueName)
 		{
 			try
 			{
@@ -140,7 +140,7 @@ namespace LolEsportsCalendar
 				string leagueId = leagueLookup[leagueName];
 
 				// Get events of league
-				var events = await _lolEsportsClient.GetScheduleByLeague(leagueId);
+				var events = await _lolEsportsClient.GetScheduleByLeagueAsync(leagueId);
 
 				foreach (EsportEvent esportEvent in events)
 				{
