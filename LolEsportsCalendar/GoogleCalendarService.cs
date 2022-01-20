@@ -3,6 +3,7 @@ using GoogleCalendarApiClient;
 using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 
@@ -11,13 +12,6 @@ namespace LolEsportsCalendar
 	public class GoogleCalendarService
 	{
 		private readonly Dictionary<string, string> calendarLookup = new Dictionary<string, string>();
-		private CalendarList calendars;
-		readonly List<string> selectedLeagues = new List<string>
-		{
-			"LEC",
-			"European Masters",
-			"Worlds"
-		};
 
 		private CalendarsService _calendarsService;
 		private CalendarListService _calendarListService;
@@ -38,7 +32,6 @@ namespace LolEsportsCalendar
 		{
 			// View
 			CalendarList calendarList = _calendarListService.ViewCalendarList();
-			calendars = calendarList;
 
 			// Add calendars to lookup
 			foreach (var c in calendarList.Items)
