@@ -15,6 +15,13 @@ using System.Threading.Tasks;
 
 namespace LolEsportsCalendar
 {
+	public class LolEsportsOptions
+	{
+		public string ApiKey { get; set; }
+		public string BaseUrl { get; set; }
+		public string[] Calendars { get; set; }
+	}
+
 	class Program
 	{
 		static async Task Main(string[] args)
@@ -93,10 +100,13 @@ namespace LolEsportsCalendar
 	{
 		public static IServiceCollection AddLeagueEsportService(this IServiceCollection services, IConfiguration configuration)
 		{
+			services.Configure<LolEsportsOptions>(configuration);
 			services.AddSingleton<LolEsportsService>();
 			services.AddHttpClient<LolEsportsClient>((serviceProvider, httpClient) => {
-				httpClient.BaseAddress = new Uri(configuration.GetValue<string>("BaseUrl"));
-				httpClient.DefaultRequestHeaders.Add("x-api-key", configuration.GetValue<string>("ApiKey"));
+				LolEsportsOptions lolEsportOptions = configuration.Get<LolEsportsOptions>();
+
+				httpClient.BaseAddress = new Uri(lolEsportOptions.BaseUrl);
+				httpClient.DefaultRequestHeaders.Add("x-api-key", lolEsportOptions.ApiKey);
 			});
 
 			return services;
