@@ -15,54 +15,49 @@ using System.Threading.Tasks;
 
 namespace LolEsportsCalendar
 {
-	class Config
-	{
-
-	}
-
 	class Program
 	{
 		static async Task Main(string[] args)
 		{
+			// Get app configuration
 			ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 			var configuration = configurationBuilder.AddJsonFile("appsettings.json").Build();
-			
+
+			// Collect app services
 			var serviceCollection = new ServiceCollection();
+
+			// Register console app
 			serviceCollection.AddSingleton<ConsoleApp>();
-			serviceCollection.AddLogging(o => {
-				o.AddConsole().AddConfiguration(configuration);
+			// Register logging
+			serviceCollection.AddLogging(config => {
+				config.AddConsole().AddConfiguration(configuration);
 			});
 
 			await ConfigureServices(serviceCollection, configuration);
 
+			// Run
 			var serviceProvider = serviceCollection.BuildServiceProvider();
-
 			var consoleApp = serviceProvider.GetRequiredService<ConsoleApp>();
 			await consoleApp.RunAsync();
 		}
 
 		public async static Task ConfigureServices(IServiceCollection services, IConfiguration configuration)
 		{
+			// Google Calendar API
 			var userCredential = await GetUserCredentialAsync();
 
+			services.AddSingleton<GoogleCalendarService>();
+			services.AddSingleton<CalendarListService>();
+			services.AddSingleton<CalendarsService>();
+			services.AddSingleton<EventsService>();
 			services.AddSingleton(_ => new CalendarService(new BaseClientService.Initializer()
 			{
 				HttpClientInitializer = userCredential,
 				ApplicationName = "LolEsportsCalendar"
 			}));
 
-			services.AddSingleton<GoogleCalendarService>();
-			services.AddSingleton<LolEsportsService>();
-			services.AddHttpClient<LolEsportsClient>((httpClient) => {
-				var lolEsportsConfig = configuration.GetSection("LolEsports");
-
-				httpClient.BaseAddress = new Uri(lolEsportsConfig.GetValue<string>("BaseUrl"));
-				httpClient.DefaultRequestHeaders.Add("x-api-key", lolEsportsConfig.GetValue<string>("ApiKey"));
-			});
-
-			services.AddSingleton<CalendarListService>();
-			services.AddSingleton<CalendarsService>();
-			services.AddSingleton<EventsService>();
+			// LolEsports API
+			services.AddLeagueEsportService(configuration.GetSection("LolEsports"));
 		}
 
 		static async Task<UserCredential> GetUserCredentialAsync()
@@ -81,6 +76,19 @@ namespace LolEsportsCalendar
 				CancellationToken.None,
 				new FileDataStore("token.json", true));
 		}
+	}
 
+	public static class LeagueServiceCollection
+	{
+		public static IServiceCollection AddLeagueEsportService(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddSingleton<LolEsportsService>();
+			services.AddHttpClient<LolEsportsClient>((serviceProvider, httpClient) => {
+				httpClient.BaseAddress = new Uri(configuration.GetValue<string>("BaseUrl"));
+				httpClient.DefaultRequestHeaders.Add("x-api-key", configuration.GetValue<string>("ApiKey"));
+			});
+
+			return services;
+		}
 	}
 }
