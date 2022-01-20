@@ -8,7 +8,7 @@ Click the links below to add the calendar to your own.
 - Check the [following link](https://calendar.google.com/calendar/u/0/syncselect) and resync the calendar.
 
 # Support
-Let [me know](https://github.com/ArnoutPullen/LolEsportsCalendar/issues/new?title=Feature Request: New Calendar) if you would like more calendars.
+Let [me know](https://github.com/ArnoutPullen/LolEsportsCalendar/issues/new?title=Feature%20Request:%20New%20Calendar) if you would like more calendars.
 
 # References
 - https://lolesports.com/
