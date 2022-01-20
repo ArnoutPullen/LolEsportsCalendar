@@ -5,7 +5,7 @@
 
 # Credentials
 credentials.json
-lolesports-credentials.json
+appsecrets.json
 
 # User-specific files
 *.rsuser
