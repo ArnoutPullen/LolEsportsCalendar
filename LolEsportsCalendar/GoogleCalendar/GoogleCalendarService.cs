@@ -29,7 +29,7 @@ namespace LolEsportsCalendar.GoogleCalendar
 		public void BuildCalendarLookup()
 		{
 			// View
-			CalendarList calendarList = _calendarListService.ViewCalendarList();
+			CalendarList calendarList = _calendarListService.List();
 
 			// Add calendars to lookup
 			foreach (var c in calendarList.Items)
@@ -86,7 +86,7 @@ namespace LolEsportsCalendar.GoogleCalendar
 
 			try
 			{
-				newCalendar = _calendarsService.InsertCalendar(calendar);
+				newCalendar = _calendarsService.Insert(calendar);
 			}
 			catch (Exception exception)
 			{
