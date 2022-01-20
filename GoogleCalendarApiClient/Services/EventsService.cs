@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace GoogleCalendarApiClient.Services
@@ -7,9 +8,11 @@ namespace GoogleCalendarApiClient.Services
 	public class EventsService
 	{
 		private readonly CalendarService _service;
+		private ILogger<EventsService> _logger;
 
-		public EventsService(CalendarService calendarService)
+		public EventsService(CalendarService calendarService, ILogger<EventsService> logger)
 		{
+			_logger = logger;
 			_service = calendarService;
 		}
 
@@ -36,9 +39,9 @@ namespace GoogleCalendarApiClient.Services
 				EventsResource.GetRequest getRequest = _service.Events.Get(calendarId, eventId);
 				@event = getRequest.Execute();
 			}
-			catch (Exception)
+			catch (Exception exception)
 			{
-				// Console.WriteLine(exception.Message);
+				_logger.LogError("Error while getting event", exception);
 			}
 			
 			return @event;

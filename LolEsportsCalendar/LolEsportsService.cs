@@ -1,6 +1,8 @@
 ﻿using Google.Apis.Calendar.v3.Data;
 using LolEsportsApiClient;
 using LolEsportsApiClient.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,11 +21,13 @@ namespace LolEsportsCalendar
 
 		public LolEsportsClient _lolEsportsClient;
 		public GoogleCalendarService _googleCalendarService;
+		private ILogger<LolEsportsService> _logger;
 
-		public LolEsportsService(GoogleCalendarService googleCalendarService, LolEsportsClient lolEsportsClient)
+		public LolEsportsService(GoogleCalendarService googleCalendarService, LolEsportsClient lolEsportsClient, ILogger<LolEsportsService> logger)
 		{
 			_googleCalendarService = googleCalendarService;
 			_lolEsportsClient = lolEsportsClient;
+			_logger = logger;
 		}
 
 		public async Task<List<League>> GetLeagues()
@@ -36,7 +40,7 @@ namespace LolEsportsCalendar
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine(exception.Message);
+				_logger.LogError("Error while getting leauges", exception);
 			}
 
 			return leagues;
@@ -80,7 +84,7 @@ namespace LolEsportsCalendar
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine(exception.Message);
+				_logger.LogError("Error while importing missing calendars", exception);
 			}
 		}
 
@@ -103,7 +107,7 @@ namespace LolEsportsCalendar
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine(exception.Message);
+				_logger.LogError("Error while importing events for all calendars", exception);
 			}
 		}
 
@@ -120,9 +124,9 @@ namespace LolEsportsCalendar
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine(exception.Message);
+
+				_logger.LogError("Error while importing events for selected calendars", exception);
 			}
-			Console.WriteLine();
 		}
 
 		public async Task ImportEventsForLeague(string leagueName)
@@ -155,9 +159,10 @@ namespace LolEsportsCalendar
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine(exception.Message);
+				_logger.LogError("Error while importing events for leauge {0}", exception, leagueName);
 			}
-			Console.WriteLine("Events imported for league {0}", leagueName);
+
+			_logger.LogInformation("Events imported for league {0}", leagueName);
 		}
 	}
 }

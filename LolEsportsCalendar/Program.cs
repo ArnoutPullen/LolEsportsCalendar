@@ -6,6 +6,7 @@ using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -16,7 +17,7 @@ namespace LolEsportsCalendar
 {
 	class Config
 	{
-		
+
 	}
 
 	class Program
@@ -28,6 +29,9 @@ namespace LolEsportsCalendar
 			
 			var serviceCollection = new ServiceCollection();
 			serviceCollection.AddSingleton<ConsoleApp>();
+			serviceCollection.AddLogging(o => {
+				o.AddConsole().AddConfiguration(configuration);
+			});
 
 			await ConfigureServices(serviceCollection, configuration);
 

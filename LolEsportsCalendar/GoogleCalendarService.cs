@@ -2,6 +2,7 @@
 using GoogleCalendarApiClient;
 using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -21,9 +22,11 @@ namespace LolEsportsCalendar
 		private CalendarsService _calendarsService;
 		private CalendarListService _calendarListService;
 		private EventsService _eventsService;
+		private ILogger<GoogleCalendarService> _logger;
 
-		public GoogleCalendarService(CalendarsService calendarsService, CalendarListService calendarListService, EventsService eventsService)
+		public GoogleCalendarService(CalendarsService calendarsService, CalendarListService calendarListService, EventsService eventsService, ILogger<GoogleCalendarService> logger)
 		{
+			_logger = logger;
 			_calendarsService = calendarsService;
 			_calendarListService = calendarListService;
 			_eventsService = eventsService;
@@ -59,7 +62,7 @@ namespace LolEsportsCalendar
 		{
 			// get events
 			Events events = _eventsService.List(calendarId);
-			Console.WriteLine("Deleting {0} events", events.Items.Count);
+			_logger.LogInformation("Deleting {0} events", events.Items.Count);
 
 			// delete events
 			foreach (Event e in events.Items)
@@ -68,17 +71,18 @@ namespace LolEsportsCalendar
 
 				if (deleted == "")
 				{
-					Console.WriteLine("Deleted {0} from calendar {1}", e.Summary, calendarId);
+					_logger.LogInformation("Deleted {0} from calendar {1}", e.Summary, calendarId);
 				}
 				else
 				{
-					Console.WriteLine("Error while deleting {0} from calendar {1}", e.Summary, calendarId);
+					_logger.LogInformation("Something went wrong while deleting event {0}, from calendar {1}", e.Summary, calendarId);
 				}
 			}
 		}
 
 		public Calendar InsertLeagueAsCalendar(League league)
 		{
+			Calendar newCalendar = null;
 			Calendar calendar = new Calendar
 			{
 				Summary = league.Name,
@@ -89,16 +93,19 @@ namespace LolEsportsCalendar
 				// TimeZone = "Europe/Amsterdam"
 			};
 
-			Calendar newCalendar = _calendarsService.InsertCalendar(calendar);
-
-			if (calendar != null)
+			try
 			{
-				calendarLookup.Add(calendar.Summary, calendar.Id);
-				Console.WriteLine("Created calendar {0}", calendar.Summary);
+				newCalendar = _calendarsService.InsertCalendar(calendar);
 			}
-			else
+			catch (Exception exception)
 			{
-				Console.WriteLine("Error while creating calendar");
+				_logger.LogError(exception, "Error while creating calendar", calendar.Summary);
+			}
+
+			if (newCalendar != null)
+			{
+				_logger.LogInformation("Created calendar {0}", calendar.Summary);
+				calendarLookup.Add(calendar.Summary, calendar.Id);
 			}
 
 			return newCalendar;
@@ -107,13 +114,14 @@ namespace LolEsportsCalendar
 		public Event GetEvent(string calendarId, string eventId)
 		{
 			Event newEvent = null;
+
 			try
 			{
 				newEvent = _eventsService.Get(calendarId, eventId);
 			}
 			catch (Exception exception)
 			{
-				Console.WriteLine(exception.Message);
+				_logger.LogError(exception, "Error while getting event {0} from calendar {1}", calendarId, eventId);
 			}
 
 			return newEvent;
@@ -140,15 +148,20 @@ namespace LolEsportsCalendar
 
 		public Event InsertEvent(Event @event, string calendarId)
 		{
-			Event newEvent = _eventsService.Insert(@event, calendarId);
+			Event newEvent = null;
+
+			try
+			{
+				newEvent = _eventsService.Insert(@event, calendarId);
+			}
+			catch (Exception exception)
+			{
+				_logger.LogError(exception, "Error while inserting event {0} in calendar {1}", @event.Summary, calendarId);
+			}
 
 			if (newEvent != null)
 			{
-				Console.WriteLine("Created event {0} in calendar {1}", newEvent.Summary, calendarId);
-			}
-			else
-			{
-				Console.WriteLine("Error while creating event in calendar, {0}", calendarId);
+				_logger.LogInformation("Created event {0} in calendar {1}", newEvent.Summary, calendarId);
 			}
 
 			return newEvent;
@@ -156,15 +169,20 @@ namespace LolEsportsCalendar
 
 		public Event UpdateEvent(Event @event, string calendarId, string eventId)
 		{
-			Event updatedEvent = _eventsService.Update(@event, calendarId, eventId);
+			Event updatedEvent = null;
+
+			try
+			{
+				updatedEvent = _eventsService.Update(@event, calendarId, eventId);
+			}
+			catch (Exception exception)
+			{
+				_logger.LogError(exception, "Error while updating event {0} in calendar {1}", @event.Summary, calendarId);
+			}
 
 			if (updatedEvent != null)
 			{
-				Console.WriteLine("Updated event {0}", updatedEvent.Summary);
-			}
-			else
-			{
-				Console.WriteLine("Error while updating event in calendar, {0}", calendarId);
+				_logger.LogInformation("Updated event {0} in calendar {1}", updatedEvent.Summary, calendarId);
 			}
 
 			return updatedEvent;

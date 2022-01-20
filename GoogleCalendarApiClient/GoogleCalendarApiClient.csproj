@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.55.0.2554" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
