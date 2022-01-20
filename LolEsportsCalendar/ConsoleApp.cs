@@ -14,7 +14,7 @@ namespace LolEsportsCalendar
 		public async Task RunAsync()
 		{
 			await _lolEsportsService.ImportMissingCalendarsAsync();
-			_lolEsportsService.ImportEventsForSelectedCalendars();
+			_lolEsportsService.ImportEventsForSelectedCalendarsAsync();
 		}
 	}
 }

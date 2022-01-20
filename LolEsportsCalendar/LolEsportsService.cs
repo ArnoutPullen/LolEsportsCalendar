@@ -111,15 +111,15 @@ namespace LolEsportsCalendar
 			}
 		}
 
-		public void ImportEventsForSelectedCalendars()
+		public async void ImportEventsForSelectedCalendarsAsync()
 		{
-			BuildLeagueLookupAsync().GetAwaiter().GetResult();
+			await BuildLeagueLookupAsync();
 
 			try
 			{
 				foreach (var selectedLeague in selectedLeagues)
 				{
-					ImportEventsForLeagueAsync(selectedLeague).GetAwaiter().GetResult();
+					await ImportEventsForLeagueAsync(selectedLeague);
 				}
 			}
 			catch (Exception exception)
