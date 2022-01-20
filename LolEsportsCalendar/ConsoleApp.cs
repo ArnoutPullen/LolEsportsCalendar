@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using LolEsportsCalendar.LolEsports;
+using System.Threading.Tasks;
 
 namespace LolEsportsCalendar
 {

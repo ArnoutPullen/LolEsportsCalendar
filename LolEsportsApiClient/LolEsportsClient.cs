@@ -57,7 +57,7 @@ namespace LolEsportsApiClient
             return httpContent.Data;
         }
 
-        public string DictionaryToQueryString(Dictionary<string, string> query = null)
+        private string DictionaryToQueryString(Dictionary<string, string> query = null)
         {
             NameValueCollection queryString = HttpUtility.ParseQueryString(string.Empty);
 

@@ -1,13 +1,11 @@
 ﻿using Google.Apis.Calendar.v3.Data;
-using GoogleCalendarApiClient;
 using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 
-namespace LolEsportsCalendar
+namespace LolEsportsCalendar.GoogleCalendar
 {
 	public class GoogleCalendarService
 	{
