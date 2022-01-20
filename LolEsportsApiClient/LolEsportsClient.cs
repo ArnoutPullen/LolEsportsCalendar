@@ -76,10 +76,4 @@ namespace LolEsportsApiClient
             return '?' + queryString.ToString();
         }
     }
-
-    public class LolEsportsClientSecrets
-    {
-        [JsonProperty("api_key")]
-        public string ApiKey { get; set; }
-	}
 }

@@ -33,7 +33,7 @@ namespace LolEsportsCalendar
 				config.AddConsole().AddConfiguration(configuration);
 			});
 
-			await ConfigureServices(serviceCollection, configuration);
+			ConfigureServices(serviceCollection, configuration);
 
 			// Run
 			var serviceProvider = serviceCollection.BuildServiceProvider();
@@ -41,10 +41,22 @@ namespace LolEsportsCalendar
 			await consoleApp.RunAsync();
 		}
 
-		public async static Task ConfigureServices(IServiceCollection services, IConfiguration configuration)
+		public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
 		{
 			// Google Calendar API
-			var userCredential = await GetUserCredentialAsync();
+			services.AddGoogleCalendarService();
+
+			// LolEsports API
+			services.AddLeagueEsportService(configuration.GetSection("LolEsports"));
+		}
+	}
+
+	public static class GoogleCalendarServiceCollection
+	{
+		public static IServiceCollection AddGoogleCalendarService(this IServiceCollection services)
+		{
+			// Google Calendar API
+			var userCredential = GetUserCredentialAsync().GetAwaiter().GetResult();
 
 			services.AddSingleton<GoogleCalendarService>();
 			services.AddSingleton<CalendarListService>();
@@ -56,11 +68,10 @@ namespace LolEsportsCalendar
 				ApplicationName = "LolEsportsCalendar"
 			}));
 
-			// LolEsports API
-			services.AddLeagueEsportService(configuration.GetSection("LolEsports"));
+			return services;
 		}
 
-		static async Task<UserCredential> GetUserCredentialAsync()
+		public static async Task<UserCredential> GetUserCredentialAsync()
 		{
 			using var stream =
 				new FileStream("credentials.json", FileMode.Open, FileAccess.Read);
