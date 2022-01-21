@@ -14,7 +14,7 @@ namespace LolEsportsApiClient
 	public class LolEsportsClient
     {
 		private readonly HttpClient _httpClient;
-        private ILogger<LolEsportsClient> _logger;
+        private readonly ILogger<LolEsportsClient> _logger;
 
         public LolEsportsClient(HttpClient httpClient, ILogger<LolEsportsClient> logger)
 		{

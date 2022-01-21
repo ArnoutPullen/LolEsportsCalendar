@@ -8,7 +8,7 @@ namespace GoogleCalendarApiClient.Services
 	public class EventsService
 	{
 		private readonly CalendarService _service;
-		private ILogger<EventsService> _logger;
+		private readonly ILogger<EventsService> _logger;
 
 		public EventsService(CalendarService calendarService, ILogger<EventsService> logger)
 		{

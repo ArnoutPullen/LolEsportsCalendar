@@ -10,17 +10,15 @@ namespace LolEsportsCalendar.GoogleCalendar
 	public class GoogleCalendarService
 	{
 		private readonly Dictionary<string, string> calendarLookup = new Dictionary<string, string>();
-
-		private CalendarsService _calendarsService;
-		private CalendarListService _calendarListService;
-		private ILogger<GoogleCalendarService> _logger;
+		private readonly CalendarsService _calendarsService;
+		private readonly CalendarListService _calendarListService;
+		private readonly ILogger<GoogleCalendarService> _logger;
 
 		public GoogleCalendarService(CalendarsService calendarsService, CalendarListService calendarListService, ILogger<GoogleCalendarService> logger)
 		{
 			_logger = logger;
 			_calendarsService = calendarsService;
 			_calendarListService = calendarListService;
-			_eventsService = eventsService;
 
 			BuildCalendarLookup();
 		}

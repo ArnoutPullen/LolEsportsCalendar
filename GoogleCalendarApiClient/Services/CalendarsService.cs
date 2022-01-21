@@ -9,7 +9,7 @@ namespace GoogleCalendarApiClient.Services
 	public class CalendarsService
     {
         private readonly CalendarService _service;
-        private ILogger<CalendarsService> _logger;
+        private readonly ILogger<CalendarsService> _logger;
 
         public CalendarsService(CalendarService calendarService, ILogger<CalendarsService> logger)
         {

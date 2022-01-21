@@ -14,18 +14,17 @@ namespace LolEsportsCalendar.LolEsports
 	public class LolEsportsService
 	{
 		private readonly Dictionary<string, string> leagueLookup = new Dictionary<string, string>();
-
-		public LolEsportsClient _lolEsportsClient;
-		public GoogleCalendarService _googleCalendarService;
+		private readonly LolEsportsClient _lolEsportsClient;
+		private readonly GoogleCalendarService _googleCalendarService;
 		private readonly EventsService _eventsService;
-		private ILogger<LolEsportsService> _logger;
-		private LolEsportsOptions _options;
+		private readonly ILogger<LolEsportsService> _logger;
+		private readonly LolEsportsOptions _options;
 
 		public LolEsportsService(
-			GoogleCalendarService googleCalendarService, 
-			LolEsportsClient lolEsportsClient, 
-			EventsService eventsService, 
-			ILogger<LolEsportsService> logger, 
+			GoogleCalendarService googleCalendarService,
+			LolEsportsClient lolEsportsClient,
+			EventsService eventsService,
+			ILogger<LolEsportsService> logger,
 			IOptions<LolEsportsOptions> options
 		)
 		{
