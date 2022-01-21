@@ -32,19 +32,19 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
 		public Event Get(string calendarId, string eventId)
 		{ 
-			Event @event = null;
+			Event _event = null;
 
 			try
 			{
 				EventsResource.GetRequest getRequest = _service.Events.Get(calendarId, eventId);
-				@event = getRequest.Execute();
+				_event = getRequest.Execute();
 			}
 			catch (Exception exception)
 			{
-				_logger.LogError("Error while getting event", exception);
+				_logger.LogError(exception, "Error while getting Event with id {0}", eventId);
 			}
 			
-			return @event;
+			return _event;
 		}
 
 		/// <summary>Creates an event.
@@ -56,6 +56,23 @@ namespace GoogleCalendarApiClient.Services
 			Event newEvent = insertRequest.Execute();
 
 			return newEvent;
+		}
+
+		public Event InsertOrUpdate(Event _event, string calendarId, string eventId)
+		{
+			Event insertedOrUpdatedEvent;
+			Event existing = Get(calendarId, eventId);
+
+			if (existing == null)
+			{
+				insertedOrUpdatedEvent = Insert(_event, calendarId);
+			}
+			else
+			{
+				insertedOrUpdatedEvent = Update(_event, calendarId, eventId);
+			}
+
+			return insertedOrUpdatedEvent;
 		}
 
 		/// <summary>Updates an event.

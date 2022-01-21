@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Calendar.v3.Data;
+using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient;
 using LolEsportsApiClient.Models;
 using LolEsportsCalendar.GoogleCalendar;
@@ -16,12 +17,20 @@ namespace LolEsportsCalendar.LolEsports
 
 		public LolEsportsClient _lolEsportsClient;
 		public GoogleCalendarService _googleCalendarService;
+		private readonly EventsService _eventsService;
 		private ILogger<LolEsportsService> _logger;
 		private LolEsportsOptions _options;
 
-		public LolEsportsService(GoogleCalendarService googleCalendarService, LolEsportsClient lolEsportsClient, ILogger<LolEsportsService> logger, IOptions<LolEsportsOptions> options)
+		public LolEsportsService(
+			GoogleCalendarService googleCalendarService, 
+			LolEsportsClient lolEsportsClient, 
+			EventsService eventsService, 
+			ILogger<LolEsportsService> logger, 
+			IOptions<LolEsportsOptions> options
+		)
 		{
 			_googleCalendarService = googleCalendarService;
+			_eventsService = eventsService;
 			_lolEsportsClient = lolEsportsClient;
 			_logger = logger;
 			_options = options.Value;
@@ -148,7 +157,7 @@ namespace LolEsportsCalendar.LolEsports
 					Event @event = _googleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
 
 					// Insert or Update GoogleEvent
-					_googleCalendarService.InsertOrUpdateEvent(@event, calendarId, @event.Id);
+					_eventsService.InsertOrUpdate(@event, calendarId, @event.Id);
 				}
 			}
 			catch (Exception exception)

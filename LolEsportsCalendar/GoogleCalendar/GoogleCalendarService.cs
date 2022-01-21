@@ -13,10 +13,9 @@ namespace LolEsportsCalendar.GoogleCalendar
 
 		private CalendarsService _calendarsService;
 		private CalendarListService _calendarListService;
-		private EventsService _eventsService;
 		private ILogger<GoogleCalendarService> _logger;
 
-		public GoogleCalendarService(CalendarsService calendarsService, CalendarListService calendarListService, EventsService eventsService, ILogger<GoogleCalendarService> logger)
+		public GoogleCalendarService(CalendarsService calendarsService, CalendarListService calendarListService, ILogger<GoogleCalendarService> logger)
 		{
 			_logger = logger;
 			_calendarsService = calendarsService;
@@ -49,28 +48,6 @@ namespace LolEsportsCalendar.GoogleCalendar
 			return calendarLookup.ContainsKey(key);
 		}
 
-		public void ClearCalendar(string calendarId)
-		{
-			// get events
-			Events events = _eventsService.List(calendarId);
-			_logger.LogInformation("Deleting {0} events", events.Items.Count);
-
-			// delete events
-			foreach (Event e in events.Items)
-			{
-				string deleted = _eventsService.Delete(calendarId, e.Id);
-
-				if (deleted == "")
-				{
-					_logger.LogInformation("Deleted {0} from calendar {1}", e.Summary, calendarId);
-				}
-				else
-				{
-					_logger.LogInformation("Something went wrong while deleting event {0}, from calendar {1}", e.Summary, calendarId);
-				}
-			}
-		}
-
 		public Calendar InsertLeagueAsCalendar(League league)
 		{
 			Calendar newCalendar = null;
@@ -100,83 +77,6 @@ namespace LolEsportsCalendar.GoogleCalendar
 			}
 
 			return newCalendar;
-		}
-
-		public Event GetEvent(string calendarId, string eventId)
-		{
-			Event newEvent = null;
-
-			try
-			{
-				newEvent = _eventsService.Get(calendarId, eventId);
-			}
-			catch (Exception exception)
-			{
-				_logger.LogError(exception, "Error while getting event {0} from calendar {1}", calendarId, eventId);
-			}
-
-			return newEvent;
-		}
-
-		public Event InsertOrUpdateEvent(Event @event, string calendarId, string eventId)
-		{
-			Event changedEvent;
-
-			// Check if event already exists
-			var existingEvent = GetEvent(calendarId, eventId);
-
-			if (existingEvent == null)
-			{
-				changedEvent = InsertEvent(@event, calendarId);
-			}
-			else
-			{
-				changedEvent = UpdateEvent(@event, calendarId, eventId);
-			}
-
-			return changedEvent;
-		}
-
-		public Event InsertEvent(Event @event, string calendarId)
-		{
-			Event newEvent = null;
-
-			try
-			{
-				newEvent = _eventsService.Insert(@event, calendarId);
-			}
-			catch (Exception exception)
-			{
-				_logger.LogError(exception, "Error while inserting event {0} in calendar {1}", @event.Summary, calendarId);
-			}
-
-			if (newEvent != null)
-			{
-				_logger.LogInformation("Created event {0} in calendar {1}", newEvent.Summary, calendarId);
-			}
-
-			return newEvent;
-		}
-
-		public Event UpdateEvent(Event @event, string calendarId, string eventId)
-		{
-			Event updatedEvent = null;
-
-			try
-			{
-				updatedEvent = _eventsService.Update(@event, calendarId, eventId);
-			}
-			catch (Exception exception)
-			{
-				_logger.LogError(exception, "Error while updating event {0} in calendar {1}", @event.Summary, calendarId);
-			}
-
-			if (updatedEvent != null)
-			{
-				_logger.LogInformation("Updated event {0} in calendar {1}", updatedEvent.Summary, calendarId);
-			}
-
-			return updatedEvent;
 		}
 
 		public Event ConvertEsportEventToGoogleEvent(EsportEvent esportEvent)
