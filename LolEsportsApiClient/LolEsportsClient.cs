@@ -1,4 +1,5 @@
 ﻿using LolEsportsApiClient.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,12 @@ namespace LolEsportsApiClient
 	public class LolEsportsClient
     {
 		private readonly HttpClient _httpClient;
+        private ILogger<LolEsportsClient> _logger;
 
-		public LolEsportsClient(HttpClient httpClient)
+        public LolEsportsClient(HttpClient httpClient, ILogger<LolEsportsClient> logger)
 		{
 		    _httpClient = httpClient;
+            _logger = logger;
 		}
 
         public async Task<List<League>> GetLeaguesAsync()
@@ -45,16 +48,25 @@ namespace LolEsportsApiClient
 
         private async Task<T> GetDataAsync<T>(string path)
         {
-            var response = await _httpClient.GetAsync(path);
+            T data = default;
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new HttpRequestException("Response not ok");
+            try
+			{
+                var response = await _httpClient.GetAsync(path);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException("Response not ok");
+                }
+
+                data = (await response.Content.ReadAsAsync<LolEsportsResponse<T>>()).Data;
             }
+			catch (Exception exception)
+			{
+                _logger.LogError(exception, "Error while getting data from {0}", path);
+			}
 
-            var httpContent = await response.Content.ReadAsAsync<LolEsportsResponse<T>>();
-
-            return httpContent.Data;
+            return data;
         }
 
         private string DictionaryToQueryString(Dictionary<string, string> query = null)
