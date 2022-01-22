@@ -13,82 +13,46 @@ namespace LolEsportsCalendar.LolEsports
 {
 	public class LolEsportsService
 	{
-		private readonly Dictionary<string, string> leagueLookup = new Dictionary<string, string>();
 		private readonly LolEsportsClient _lolEsportsClient;
+		private readonly LolEsportsOptions _options;
 		private readonly GoogleCalendarService _googleCalendarService;
+		private readonly CalendarsService _calendarsService;
 		private readonly EventsService _eventsService;
 		private readonly ILogger<LolEsportsService> _logger;
-		private readonly LolEsportsOptions _options;
 
 		public LolEsportsService(
 			GoogleCalendarService googleCalendarService,
 			LolEsportsClient lolEsportsClient,
 			EventsService eventsService,
+			CalendarsService calendarsService,
 			ILogger<LolEsportsService> logger,
 			IOptions<LolEsportsOptions> options
 		)
 		{
 			_googleCalendarService = googleCalendarService;
+			_calendarsService = calendarsService;
 			_eventsService = eventsService;
 			_lolEsportsClient = lolEsportsClient;
 			_logger = logger;
 			_options = options.Value;
 		}
 
-		public async Task<List<League>> GetLeaguesAsync()
+		public async Task ImportEvents()
 		{
-			List<League> leagues = null;
+			string[] leagueNames = _options.Leagues;
 
-			try
+			if (leagueNames != null) 
 			{
-				leagues = await _lolEsportsClient.GetLeaguesAsync();
-			}
-			catch (Exception exception)
-			{
-				_logger.LogError("Error while getting leauges", exception);
-			}
-
-			return leagues;
-		}
-
-		public async Task BuildLeagueLookupAsync()
-		{
-			var leagues = await GetLeaguesAsync();
-
-			if (leagues != null)
-			{
-				foreach (var league in leagues)
+				foreach(var leagueName in leagueNames)
 				{
-					leagueLookup.Add(league.Name, league.Id);
+					Calendar calendar = FindOrCreateCalendarByLeagueName(leagueName);
+					League league = _lolEsportsClient.GetLeagueByName(leagueName);
+
+					// Import events for calendar
+					await ImportEventsForLeagueAsync(league.Id, calendar.Id);
 				}
-			}
-		}
-
-		public async Task ImportMissingCalendarsAsync()
-		{
-			try
-			{
-				var leagues = await GetLeaguesAsync();
-
-				foreach (var league in leagues)
-				{
-					if (SkipLeague(league.Name))
-					{
-						continue;
-					}
-
-					// Check if calendar exists for league
-					bool exists = _googleCalendarService.CalendarExists(league.Name);
-
-					if (!exists)
-					{
-						_googleCalendarService.InsertLeagueAsCalendar(league);
-					}
-				}
-			}
-			catch (Exception exception)
-			{
-				_logger.LogError("Error while importing missing calendars", exception);
+			} else {
+				await ImportEventsForAllCalendarsAsync();
 			}
 		}
 
@@ -96,16 +60,19 @@ namespace LolEsportsCalendar.LolEsports
 		{
 			try
 			{
-				var leagues = await GetLeaguesAsync();
+				List<League> leagues = await _lolEsportsClient.GetLeaguesAsync();
+
+				if (leagues == null)
+				{
+					throw new NullReferenceException();
+				}
 
 				foreach (League league in leagues)
 				{
-					if (SkipLeague(league.Name))
-					{
-						continue;
-					}
+					Calendar calendar = FindOrCreateCalendarByLeagueName(league.Name);
 
-					ImportEventsForLeagueAsync(league.Name).GetAwaiter().GetResult();
+					// Import events for calendar
+					await ImportEventsForLeagueAsync(league.Id, calendar.Id);
 				}
 			}
 			catch (Exception exception)
@@ -114,77 +81,60 @@ namespace LolEsportsCalendar.LolEsports
 			}
 		}
 
-		public async Task ImportEventsForSelectedCalendarsAsync()
-		{
-			await BuildLeagueLookupAsync();
-
-			try
-			{
-				foreach (var calendar in _options.Calendars)
-				{
-					await ImportEventsForLeagueAsync(calendar);
-				}
-			}
-			catch (Exception exception)
-			{
-
-				_logger.LogError("Error while importing events for selected calendars", exception);
-			}
-		}
-
-		public async Task ImportEventsForLeagueAsync(string leagueName)
+		public async Task ImportEventsForLeagueAsync(string leagueId, string calendarId)
 		{
 			try
 			{
-				// Get calendarId
-				string calendarId = _googleCalendarService.FindCalendarId(leagueName);
+				// Get scheduled events of league
+				List<EsportEvent> esportEvents = await _lolEsportsClient.GetScheduleByLeagueAsync(leagueId);
 
-				// Get leagueId
-				string leagueId = leagueLookup[leagueName];
-
-				// Get events of league
-				var events = await _lolEsportsClient.GetScheduleByLeagueAsync(leagueId);
-
-				foreach (EsportEvent esportEvent in events)
+				foreach (EsportEvent esportEvent in esportEvents)
 				{
-					if (SkipLeague(esportEvent.League.Name))
-					{
-						continue;
-					}
-
 					// Convert LeagueEvent to GoogleEvent
-					Event @event = _googleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
+					Event googleEvent = _googleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
 
 					// Insert or Update GoogleEvent
-					_eventsService.InsertOrUpdate(@event, calendarId, @event.Id);
+					_eventsService.InsertOrUpdate(googleEvent, calendarId, googleEvent.Id);
 				}
 			}
 			catch (Exception exception)
 			{
-				_logger.LogError("Error while importing events for leauge {0}", exception, leagueName);
+				_logger.LogError("Error while importing events for leauge {0}", exception, leagueId);
 			}
 
-			_logger.LogInformation("Events imported for league {0}", leagueName);
+			_logger.LogInformation("Events imported for league {0}", leagueId);
 		}
 
-		public bool SkipLeague(string leagueName)
+		public Calendar FindOrCreateCalendarByLeagueName(string leagueName)
 		{
-			// By default skip league
-			bool contains = true;
+			// Find calendar
+			string calendarId = _googleCalendarService.FindCalendarId(leagueName);
+			Calendar existingCalendar = _calendarsService.Get(calendarId);
 
-			// Don't skip leagues if calendars not set in options
-			if (_options.Calendars == null) {
-				return false;
-			}
-
-			foreach (string calendar in _options.Calendars)
+			if (existingCalendar == null)
 			{
-				if (leagueName == calendar) {
-					contains = false;
-				}
+				League league = _lolEsportsClient.GetLeagueByName(leagueName);
+				Calendar newCalendar = ConvertLeagueToCalendar(league);
+
+				return _calendarsService.Insert(newCalendar);
 			}
 
-			return contains;
+			return existingCalendar;
+		}
+
+		public Calendar ConvertLeagueToCalendar(League league)
+		{
+			Calendar calendar = new Calendar
+			{
+				Summary = league.Name,
+				Description = league.Name + " / " + league.Region,
+				// ETag = "Test",
+				// Kind = "Test",
+				// Location = "Test",
+				// TimeZone = "Europe/Amsterdam"
+			};
+
+			return calendar;
 		}
 	}
 }

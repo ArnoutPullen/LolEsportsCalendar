@@ -15,6 +15,7 @@ namespace LolEsportsApiClient
     {
 		private readonly HttpClient _httpClient;
         private readonly ILogger<LolEsportsClient> _logger;
+        private List<League> _leagues = null;
 
         public LolEsportsClient(HttpClient httpClient, ILogger<LolEsportsClient> logger)
 		{
@@ -26,8 +27,27 @@ namespace LolEsportsApiClient
         {
             var leaguesResponseData = await GetDataAsync<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString());
 
-            return leaguesResponseData.Leagues;
+			_leagues = leaguesResponseData.Leagues;
+
+            return _leagues;
         }
+
+        public League GetLeagueByName(string leagueName)
+        {
+            if (_leagues == null)
+            {
+                _leagues = GetLeaguesAsync().GetAwaiter().GetResult();
+            }
+			foreach (League league in _leagues)
+			{
+                if (league.Name == leagueName)
+                {
+                    return league;
+				}
+			}
+
+            return null;
+		}
 
         public async Task<List<EsportEvent>> GetScheduleAsync()
         {
@@ -48,6 +68,17 @@ namespace LolEsportsApiClient
 
         private async Task<T> GetDataAsync<T>(string path)
         {
+            var response = await _httpClient.GetAsync(path);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException("Response not ok");
+            }
+
+            LolEsportsResponse<T> data = await response.Content.ReadAsAsync<LolEsportsResponse<T>>();
+            return data.Data;
+
+            /*
             T data = default;
 
             try
@@ -59,7 +90,7 @@ namespace LolEsportsApiClient
                     throw new HttpRequestException("Response not ok");
                 }
 
-                data = (await response.Content.ReadAsAsync<LolEsportsResponse<T>>()).Data;
+                return await response.Content.ReadAsAsync<LolEsportsResponse<T>>().Data;
             }
 			catch (Exception exception)
 			{
@@ -67,6 +98,7 @@ namespace LolEsportsApiClient
 			}
 
             return data;
+            */
         }
 
         private string DictionaryToQueryString(Dictionary<string, string> query = null)
