@@ -49,10 +49,14 @@ namespace LolEsportsCalendar.LolEsports
 				foreach(var leagueName in leagueNames)
 				{
 					Calendar calendar = FindOrCreateCalendarByLeagueName(leagueName);
-					League league = _lolEsportsClient.GetLeagueByName(leagueName);
 
-					// Import events for calendar
-					await ImportEventsForLeagueAsync(league.Id, calendar.Id);
+					if (calendar != null)
+					{
+						League league = _lolEsportsClient.GetLeagueByName(leagueName);
+
+						// Import events for calendar
+						await ImportEventsForLeagueAsync(league.Id, calendar.Id);
+					}
 				}
 			} else {
 				await ImportEventsForAllCalendarsAsync();
@@ -65,20 +69,19 @@ namespace LolEsportsCalendar.LolEsports
 			{
 				List<League> leagues = await _lolEsportsClient.GetLeaguesAsync();
 
-				if (leagues == null)
-				{
-					throw new NullReferenceException();
-				}
-
 				foreach (League league in leagues)
 				{
 					Calendar calendar = FindOrCreateCalendarByLeagueName(league.Name);
 
-					// Import events for calendar
-					await ImportEventsForLeagueAsync(league.Id, calendar.Id);
+					if (calendar != null)
+					{
+						// Import events for calendar
+						await ImportEventsForLeagueAsync(league.Id, calendar.Id);
 
-					// Wait 1 sec
-					Thread.Sleep(60);
+						// Wait 1 sec
+						Thread.Sleep(60);
+					}
+
 				}
 			}
 			catch (Exception exception)
@@ -133,10 +136,18 @@ namespace LolEsportsCalendar.LolEsports
 
 		public Calendar FindOrCreateCalendarByLeagueName(string leagueName)
 		{
+			Calendar existingCalendar = null;
+
 			// Find calendar
 			string calendarId = _googleCalendarService.FindCalendarId(leagueName);
-			Calendar existingCalendar = _calendarsService.Get(calendarId);
 
+			// Get calendar
+			if (calendarId != null)
+			{
+				existingCalendar = _calendarsService.Get(calendarId);
+			}
+
+			// Creat calendar
 			if (existingCalendar == null)
 			{
 				League league = _lolEsportsClient.GetLeagueByName(leagueName);
