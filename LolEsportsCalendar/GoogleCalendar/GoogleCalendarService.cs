@@ -31,13 +31,23 @@ namespace LolEsportsCalendar.GoogleCalendar
 			// Add calendars to lookup
 			foreach (var c in calendarList.Items)
 			{
-				calendarLookup.Add(c.Summary, c.Id);
+				if (!CalendarExists(c.Summary))
+				{
+					calendarLookup.Add(c.Summary, c.Id);
+				}
 			}
 		}
 
 		public string FindCalendarId(string leagueName)
 		{
-			return calendarLookup[leagueName];
+			string calendarId = null;
+
+			if (CalendarExists(leagueName))
+			{
+				calendarId =  calendarLookup[leagueName];
+			}
+
+			return calendarId;
 		}
 
 		public bool CalendarExists(string key)
