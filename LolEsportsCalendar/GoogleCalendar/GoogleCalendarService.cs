@@ -31,7 +31,6 @@ namespace LolEsportsCalendar.GoogleCalendar
 			// Add calendars to lookup
 			foreach (var c in calendarList.Items)
 			{
-				// calendarLookup.Add(c.Id, c.Summary);
 				calendarLookup.Add(c.Summary, c.Id);
 			}
 		}
@@ -49,15 +48,7 @@ namespace LolEsportsCalendar.GoogleCalendar
 		public Calendar InsertLeagueAsCalendar(League league)
 		{
 			Calendar newCalendar = null;
-			Calendar calendar = new Calendar
-			{
-				Summary = league.Name,
-				Description = league.Name + " / " + league.Region,
-				// ETag = "Test",
-				// Kind = "Test",
-				// Location = "Test",
-				// TimeZone = "Europe/Amsterdam"
-			};
+			Calendar calendar = ConvertLeagueToCalendar(league);
 
 			try
 			{
@@ -77,15 +68,24 @@ namespace LolEsportsCalendar.GoogleCalendar
 			return newCalendar;
 		}
 
+		public Calendar ConvertLeagueToCalendar(League league)
+		{
+			Calendar calendar = new Calendar
+			{
+				Summary = league.Name,
+				Description = league.Name + " / " + league.Region,
+			};
+
+			return calendar;
+		}
+
 		public Event ConvertEsportEventToGoogleEvent(EsportEvent esportEvent)
 		{
-			// Convert EsportEvent to Event
 			Event @event = new Event()
 			{
 				Id = esportEvent.Match.Id,
-				// ICalUID = esportEvent.Match.Id,
 				Start = new EventDateTime { DateTime = esportEvent.StartTime.UtcDateTime },
-				End = new EventDateTime { DateTime = esportEvent.StartTime.UtcDateTime },
+				End = new EventDateTime { DateTime = esportEvent.StartTime.UtcDateTime.AddHours(1) },
 				Summary = esportEvent.Match.Teams[0].Code + " vs " + esportEvent.Match.Teams[1].Code
 			};
 
