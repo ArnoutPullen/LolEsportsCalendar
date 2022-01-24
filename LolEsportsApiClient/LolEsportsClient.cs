@@ -1,10 +1,6 @@
 ﻿using LolEsportsApiClient.Models;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -14,13 +10,11 @@ namespace LolEsportsApiClient
 	public class LolEsportsClient
     {
 		private readonly HttpClient _httpClient;
-        private readonly ILogger<LolEsportsClient> _logger;
         private List<League> _leagues = null;
 
-        public LolEsportsClient(HttpClient httpClient, ILogger<LolEsportsClient> logger)
+        public LolEsportsClient(HttpClient httpClient)
 		{
 		    _httpClient = httpClient;
-            _logger = logger;
 		}
 
         public async Task<List<League>> GetLeaguesAsync()
@@ -38,6 +32,7 @@ namespace LolEsportsApiClient
             {
                 _leagues = GetLeaguesAsync().GetAwaiter().GetResult();
             }
+
 			foreach (League league in _leagues)
 			{
                 if (league.Name == leagueName)
@@ -58,10 +53,12 @@ namespace LolEsportsApiClient
 
         public async Task<List<EsportEvent>> GetScheduleByLeagueAsync(string leagueId)
         {
-            Dictionary<string, string> query = new Dictionary<string, string>();
-            query.Add("leagueId", leagueId);
+			Dictionary<string, string> query = new Dictionary<string, string>
+			{
+				{ "leagueId", leagueId }
+			};
 
-            var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query));
+			var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query));
 
             return leaguesResponseData.Schedule.Events;
         }
@@ -77,28 +74,6 @@ namespace LolEsportsApiClient
 
             LolEsportsResponse<T> data = await response.Content.ReadAsAsync<LolEsportsResponse<T>>();
             return data.Data;
-
-            /*
-            T data = default;
-
-            try
-			{
-                var response = await _httpClient.GetAsync(path);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new HttpRequestException("Response not ok");
-                }
-
-                return await response.Content.ReadAsAsync<LolEsportsResponse<T>>().Data;
-            }
-			catch (Exception exception)
-			{
-                _logger.LogError(exception, "Error while getting data from {0}", path);
-			}
-
-            return data;
-            */
         }
 
         private string DictionaryToQueryString(Dictionary<string, string> query = null)
