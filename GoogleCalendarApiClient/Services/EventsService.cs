@@ -103,7 +103,14 @@ namespace GoogleCalendarApiClient.Services
 				// Skip if string not changed
 				if (expectedPropertyValue is string && actualPropertyValue is string)
 				{
-					equals = string.Equals(expectedPropertyValue, actualPropertyValue);
+					bool stringEquals = string.Equals(expectedPropertyValue, actualPropertyValue);
+
+					if (stringEquals == false)
+					{
+						equals = false;
+						break;
+					}
+
 					continue;
 				}
 
@@ -121,13 +128,12 @@ namespace GoogleCalendarApiClient.Services
 
 				if (expectedPropertyValue is DateTime expectedDateTime)
 				{
-					// Console.WriteLine("DateTime");
 					int result = expectedDateTime.CompareTo(actualPropertyValue);
 
 					if (result != 0)
 					{
 						equals = false;
-						continue;
+						break;
 					}
 
 					continue;
@@ -135,7 +141,6 @@ namespace GoogleCalendarApiClient.Services
 
 				if (expectedPropertyValue is EventDateTime expectedEventDateTime)
 				{
-					// Console.WriteLine("EventDateTime");
 					EventDateTime actualEventDateTime = (EventDateTime)actualPropertyValue;
 					DateTime actualDateTime = actualEventDateTime.DateTime.Value;
 					int result = expectedEventDateTime.DateTime.Value.CompareTo(actualDateTime);
@@ -143,14 +148,13 @@ namespace GoogleCalendarApiClient.Services
 					if (result != 0)
 					{
 						equals = false;
-						continue;
+						break;
 					}
-					// Console.WriteLine("EventDateTime not changed");
+
 					continue;
-					// return Compare(expectedPropertyValue, actualPropertyValue);
 				}
 
-				Console.WriteLine("{0} Not Equals {1} != {2}", expectedProperty.Name, expectedPropertyValue, actualPropertyValue);
+				_logger.LogDebug("{0} Not Equals {1} != {2}", expectedProperty.Name, expectedPropertyValue, actualPropertyValue);
 			}
 
 			return equals;
