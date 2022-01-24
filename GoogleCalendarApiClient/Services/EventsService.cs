@@ -2,6 +2,7 @@
 using Google.Apis.Calendar.v3.Data;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Reflection;
 
 namespace GoogleCalendarApiClient.Services
 {
@@ -60,19 +61,99 @@ namespace GoogleCalendarApiClient.Services
 
 		public Event InsertOrUpdate(Event _event, string calendarId, string eventId)
 		{
-			Event insertedOrUpdatedEvent;
 			Event existing = Get(calendarId, eventId);
 
 			if (existing == null)
 			{
-				insertedOrUpdatedEvent = Insert(_event, calendarId);
-			}
-			else
-			{
-				insertedOrUpdatedEvent = Update(_event, calendarId, eventId);
+				_logger.LogInformation("Inserting Event {0} in calendar {1}", eventId, calendarId);
+				return Insert(_event, calendarId);
 			}
 
-			return insertedOrUpdatedEvent;
+			// Compare events, only update when data changed
+			bool equals = Compare(_event, existing);
+
+			if (!equals)
+			{
+				_logger.LogInformation("Updating Event {0} in calendar {1}", eventId, calendarId);
+				return Update(_event, calendarId, eventId);
+			}
+
+			_logger.LogInformation("Event unchanged while trying to InsertOrUpdate Event {0} in calendar {1}", eventId, calendarId);
+
+			return existing;
+		}
+
+		public bool Compare(object expectedObject, object actualObject)
+		{
+			Type expectedObjectType = expectedObject.GetType();
+			Type actualObjectType = actualObject.GetType();
+			bool equals = true;
+
+			foreach (PropertyInfo expectedProperty in expectedObjectType.GetProperties())
+			{
+				object expectedPropertyValue = expectedProperty.GetValue(expectedObject);
+				object actualPropertyValue = actualObjectType.GetProperty(expectedProperty.Name).GetValue(actualObject);
+
+				// Skip if both null
+				if (expectedPropertyValue == null && actualPropertyValue == null) 
+				{
+					continue;
+				}
+
+				// Skip if string not changed
+				if (expectedPropertyValue is string && actualPropertyValue is string)
+				{
+					equals = string.Equals(expectedPropertyValue, actualPropertyValue);
+					continue;
+				}
+
+				// Skip if value not changed
+				if (expectedPropertyValue == actualPropertyValue)
+				{
+					continue;
+				}
+
+				// Skip if expected value is null
+				if (expectedPropertyValue == null)
+				{
+					continue;
+				}
+
+				if (expectedPropertyValue is DateTime expectedDateTime)
+				{
+					// Console.WriteLine("DateTime");
+					int result = expectedDateTime.CompareTo(actualPropertyValue);
+
+					if (result != 0)
+					{
+						equals = false;
+						continue;
+					}
+
+					continue;
+				}
+
+				if (expectedPropertyValue is EventDateTime expectedEventDateTime)
+				{
+					// Console.WriteLine("EventDateTime");
+					EventDateTime actualEventDateTime = (EventDateTime)actualPropertyValue;
+					DateTime actualDateTime = actualEventDateTime.DateTime.Value;
+					int result = expectedEventDateTime.DateTime.Value.CompareTo(actualDateTime);
+
+					if (result != 0)
+					{
+						equals = false;
+						continue;
+					}
+					// Console.WriteLine("EventDateTime not changed");
+					continue;
+					// return Compare(expectedPropertyValue, actualPropertyValue);
+				}
+
+				Console.WriteLine("{0} Not Equals {1} != {2}", expectedProperty.Name, expectedPropertyValue, actualPropertyValue);
+			}
+
+			return equals;
 		}
 
 		/// <summary>Updates an event.
