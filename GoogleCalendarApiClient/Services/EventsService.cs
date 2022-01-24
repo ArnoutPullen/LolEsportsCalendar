@@ -1,4 +1,5 @@
-﻿using Google.Apis.Calendar.v3;
+﻿using Google;
+using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Microsoft.Extensions.Logging;
 using System;
@@ -39,6 +40,14 @@ namespace GoogleCalendarApiClient.Services
 			{
 				EventsResource.GetRequest getRequest = _service.Events.Get(calendarId, eventId);
 				_event = getRequest.Execute();
+			}
+			catch (GoogleApiException exception)
+			{
+				if (exception.Error.Code == 404)
+				{
+					_logger.LogWarning(exception, "Couldn't find Event with id {0}", eventId);
+				}
+				_logger.LogError(exception, "Error while getting Event with id {0}", eventId);
 			}
 			catch (Exception exception)
 			{
