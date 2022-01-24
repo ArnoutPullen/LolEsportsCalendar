@@ -1,4 +1,5 @@
-﻿using Google.Apis.Calendar.v3.Data;
+﻿using Google;
+using Google.Apis.Calendar.v3.Data;
 using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient;
 using LolEsportsApiClient.Models;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LolEsportsCalendar.LolEsports
@@ -19,6 +21,7 @@ namespace LolEsportsCalendar.LolEsports
 		private readonly CalendarsService _calendarsService;
 		private readonly EventsService _eventsService;
 		private readonly ILogger<LolEsportsService> _logger;
+		private int _rateLimitExceededCount = 0;
 
 		public LolEsportsService(
 			GoogleCalendarService googleCalendarService,
@@ -73,6 +76,9 @@ namespace LolEsportsCalendar.LolEsports
 
 					// Import events for calendar
 					await ImportEventsForLeagueAsync(league.Id, calendar.Id);
+
+					// Wait 1 sec
+					Thread.Sleep(60);
 				}
 			}
 			catch (Exception exception)
@@ -96,6 +102,26 @@ namespace LolEsportsCalendar.LolEsports
 					// Insert or Update GoogleEvent
 					_eventsService.InsertOrUpdate(googleEvent, calendarId, googleEvent.Id);
 				}
+			}
+			catch (GoogleApiException exception)
+			{
+				// :( Google can't handle all requests
+				// https://developers.google.com/calendar/api/guides/quota
+				// https://stackoverflow.com/a/40990761/5828267
+				if (exception.Error.Code == 403 && exception.Error.Message == "Rate Limit Exceeded")
+				{
+					_rateLimitExceededCount++;
+
+					if (_rateLimitExceededCount < 8)
+					{
+						// Wait
+						Thread.Sleep(60 * _rateLimitExceededCount);
+
+						// Retry
+						await ImportEventsForLeagueAsync(leagueId, calendarId);
+					}
+				}
+				_logger.LogError("Error while importing events for leauge {0}", exception, leagueId);
 			}
 			catch (Exception exception)
 			{
