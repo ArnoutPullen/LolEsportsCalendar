@@ -15,7 +15,8 @@ namespace LolEsportsApiClient
         public LolEsportsClient(HttpClient httpClient)
 		{
 		    _httpClient = httpClient;
-		}
+            _leagues = GetLeaguesAsync().GetAwaiter().GetResult();
+        }
 
         public async Task<List<League>> GetLeaguesAsync()
         {
@@ -35,7 +36,7 @@ namespace LolEsportsApiClient
 
 			foreach (League league in _leagues)
 			{
-                if (league.Name == leagueName)
+                if (league.Name == leagueName || league.Slug == leagueName.ToLower())
                 {
                     return league;
 				}

@@ -54,8 +54,14 @@ namespace LolEsportsCalendar.LolEsports
 					{
 						League league = _lolEsportsClient.GetLeagueByName(leagueName);
 
-						// Import events for calendar
-						await ImportEventsForLeagueAsync(league.Id, calendar.Id);
+						if (league == null)
+                        {
+							_logger.LogWarning("Couldn't find league with name {0}", leagueName);
+						} else
+						{
+							// Import events for calendar
+							await ImportEventsForLeagueAsync(league.Id, calendar.Id);
+						}
 					}
 				}
 			} else {
@@ -151,9 +157,16 @@ namespace LolEsportsCalendar.LolEsports
 			if (existingCalendar == null)
 			{
 				League league = _lolEsportsClient.GetLeagueByName(leagueName);
-				Calendar newCalendar = ConvertLeagueToCalendar(league);
 
-				return _calendarsService.Insert(newCalendar);
+				if (league == null)
+                {
+					_logger.LogWarning("Couldn't find league with name {0}", leagueName);
+                } else
+				{
+					Calendar newCalendar = ConvertLeagueToCalendar(league);
+
+					return _calendarsService.Insert(newCalendar);
+				}
 			}
 
 			return existingCalendar;
