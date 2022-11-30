@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "LolEsportsCalendar": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    },
+    "Profile 1": {
+      "commandName": "Project"
+    }
+  }
+}
