@@ -45,9 +45,11 @@ namespace GoogleCalendarApiClient.Services
 			{
 				if (exception.Error.Code == 404)
 				{
-					_logger.LogWarning(exception, "Couldn't find Event with id {0}", eventId);
+					_logger.LogDebug(exception, "Couldn't find Event with id {0}", eventId);
+				} else
+				{
+					_logger.LogError(exception, "Error while getting Event with id {0}", eventId);
 				}
-				_logger.LogError(exception, "Error while getting Event with id {0}", eventId);
 			}
 			catch (Exception exception)
 			{
@@ -60,22 +62,22 @@ namespace GoogleCalendarApiClient.Services
 		/// <summary>Creates an event.
 		/// <see href="https://developers.google.com/calendar/api/v3/reference/events/insert"/>
 		/// </summary>
-		public Event Insert(Event _event, string calendarId)
+		public Event Insert(Event _event, Calendar calendar)
 		{
-			EventsResource.InsertRequest insertRequest = _service.Events.Insert(_event, calendarId);
+			EventsResource.InsertRequest insertRequest = _service.Events.Insert(_event, calendar.Id);
 			Event newEvent = insertRequest.Execute();
 
 			return newEvent;
 		}
 
-		public Event InsertOrUpdate(Event _event, string calendarId, string eventId)
-		{
-			Event existing = Get(calendarId, eventId);
+		public Event InsertOrUpdate(Event _event, Calendar calendar, string eventId = null)
+        {
+			Event existing = Get(calendar.Id, eventId);
 
 			if (existing == null)
 			{
-				_logger.LogInformation("Inserting Event {0} in calendar {1}", eventId, calendarId);
-				return Insert(_event, calendarId);
+				_logger.LogInformation("Inserting Event {0} ({1}) in calendar {2}", _event.Summary, eventId, calendar.Summary);
+				return Insert(_event, calendar);
 			}
 
 			// Compare events, only update when data changed
@@ -83,11 +85,12 @@ namespace GoogleCalendarApiClient.Services
 
 			if (!equals)
 			{
-				_logger.LogInformation("Updating Event {0} in calendar {1}", eventId, calendarId);
-				return Update(_event, calendarId, eventId);
+				_logger.LogInformation("Updating Event {0} ({1}) in calendar {2}", _event.Summary, eventId, calendar.Summary);
+				return Update(_event, calendar, eventId);
 			}
 
-			_logger.LogInformation("Event unchanged while trying to InsertOrUpdate Event {0} in calendar {1}", eventId, calendarId);
+			// TODO: Show league name
+			_logger.LogDebug("Event unchanged while trying to InsertOrUpdate Event {0} ({1}) in calendar {2}", _event.Summary, eventId, calendar.Summary);
 
 			return existing;
 		}
@@ -172,9 +175,9 @@ namespace GoogleCalendarApiClient.Services
 		/// <summary>Updates an event.
 		/// <see href="https://developers.google.com/calendar/api/v3/reference/events/update"/>
 		/// </summary>
-		public Event Update(Event _event, string calendarId, string eventId)
+		public Event Update(Event _event, Calendar calendar, string eventId)
 		{
-			EventsResource.UpdateRequest updateRequest = _service.Events.Update(_event, calendarId, eventId);
+			EventsResource.UpdateRequest updateRequest = _service.Events.Update(_event, calendar.Id, eventId);
 			Event updatedEvent = updateRequest.Execute();
 
 			return updatedEvent;
@@ -183,9 +186,9 @@ namespace GoogleCalendarApiClient.Services
 		/// <summary>Imports an event. This operation is used to add a private copy of an existing event to a calendar.
 		/// <see href="https://developers.google.com/calendar/api/v3/reference/events/import"/>
 		/// </summary>
-		public Event Import(Event _event, string calendarId)
+		public Event Import(Event _event, Calendar calendar)
 		{
-			EventsResource.ImportRequest importRequest = _service.Events.Import(_event, calendarId);
+			EventsResource.ImportRequest importRequest = _service.Events.Import(_event, calendar.Id);
 			Event newEvent = importRequest.Execute();
 
 			return newEvent;
@@ -194,9 +197,9 @@ namespace GoogleCalendarApiClient.Services
 		/// <summary>Deletes an event.
 		/// <see href="https://developers.google.com/calendar/api/v3/reference/events/delete"/>
 		/// </summary>
-		public string Delete(string calendarId, string eventId)
+		public string Delete(Calendar calendar, Event _event)
 		{
-			EventsResource.DeleteRequest deleteRequest = _service.Events.Delete(calendarId, eventId);
+			EventsResource.DeleteRequest deleteRequest = _service.Events.Delete(calendar.Id, _event.Id);
 			string result = deleteRequest.Execute();
 
 			return result;

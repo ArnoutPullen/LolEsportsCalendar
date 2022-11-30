@@ -52,11 +52,11 @@ namespace LolEsportsApiClient
             return leaguesResponseData.Schedule.Events;
         }
 
-        public async Task<List<EsportEvent>> GetScheduleByLeagueAsync(string leagueId)
+        public async Task<List<EsportEvent>> GetScheduleByLeagueAsync(League league)
         {
 			Dictionary<string, string> query = new Dictionary<string, string>
 			{
-				{ "leagueId", leagueId }
+				{ "leagueId", league.Id }
 			};
 
 			var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query));

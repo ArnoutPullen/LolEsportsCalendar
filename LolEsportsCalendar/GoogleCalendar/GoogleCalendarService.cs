@@ -29,13 +29,18 @@ namespace LolEsportsCalendar.GoogleCalendar
 			CalendarList calendarList = _calendarListService.List();
 
 			// Add calendars to lookup
-			foreach (var c in calendarList.Items)
+			foreach (var calendar in calendarList.Items)
 			{
-				if (!CalendarExists(c.Summary))
+				if (!CalendarExists(calendar.Summary))
 				{
-					calendarLookup.Add(c.Summary, c.Id);
+					calendarLookup.Add(calendar.Summary, calendar.Id);
 				}
 			}
+		}
+
+		public Dictionary<string, string> GetCalendarLookup()
+        {
+			return calendarLookup;
 		}
 
 		public string FindCalendarId(string leagueName)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace LolEsportsCalendar
@@ -21,20 +22,22 @@ namespace LolEsportsCalendar
 
 			// Register logging
 			serviceCollection.AddLogging(config => {
-				config.AddConsole().AddConfiguration(configuration);
+				config.AddConsole().AddConfiguration(configuration.GetSection("Logging"));
 			});
 
-			// Configure services
+			// Configure servicesd
 			ConfigureServices(serviceCollection, configuration);
 
 			// Run
 			var serviceProvider = serviceCollection.BuildServiceProvider();
 			var consoleApp = serviceProvider.GetRequiredService<ConsoleApp>();
-			await consoleApp.RunAsync();
+            await consoleApp.RunAsync();
 		}
 
 		public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
 		{
+			services.AddSingleton<IConfiguration>(_ => configuration);
+
 			// Google Calendar API
 			services.AddGoogleCalendarService();
 
