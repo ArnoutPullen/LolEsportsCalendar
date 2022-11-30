@@ -31,7 +31,7 @@ namespace LolEsportsCalendar.GoogleCalendar
 			// Add calendars to lookup
 			foreach (var calendar in calendarList.Items)
 			{
-				if (!CalendarExists(calendar.Summary))
+				if (!calendarLookup.ContainsKey(calendar.Summary))
 				{
 					calendarLookup.Add(calendar.Summary, calendar.Id);
 				}
@@ -41,23 +41,6 @@ namespace LolEsportsCalendar.GoogleCalendar
 		public Dictionary<string, string> GetCalendarLookup()
         {
 			return calendarLookup;
-		}
-
-		public string FindCalendarId(string leagueName)
-		{
-			string calendarId = null;
-
-			if (CalendarExists(leagueName))
-			{
-				calendarId =  calendarLookup[leagueName];
-			}
-
-			return calendarId;
-		}
-
-		public bool CalendarExists(string key)
-		{
-			return calendarLookup.ContainsKey(key);
 		}
 
 		public Calendar InsertLeagueAsCalendar(League league)

@@ -69,6 +69,7 @@ namespace LolEsportsCalendar.LolEsports
 			}
 
 			_logger.LogInformation("All events imported");
+			Console.ReadLine();
 		}
 
 		public async Task ImportEventsForAllCalendarsAsync()
