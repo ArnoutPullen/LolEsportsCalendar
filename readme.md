@@ -7,6 +7,7 @@ Click one of the links below to integrate the calendar in your own.
 
 ## America
 - [LCS](https://calendar.google.com/calendar/u/1?cid=M2g4ZXBiaGtrZms2OGJqajE2ZjNhOHVyZjhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [CBLOL](https://calendar.google.com/calendar/u/1?cid=NGl2azczcWs4MzdubWNuN3ZnaTZsMXZncG9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 ## Asia
 - [LCK](https://calendar.google.com/calendar/u/1?cid=aDRmbnA0aDJrZXR0aDRsaWpmbDYwbmZ0cmtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
@@ -15,7 +16,7 @@ Click one of the links below to integrate the calendar in your own.
 ## Europe
 - [European Masters](https://calendar.google.com/calendar/u/1?cid=djhxYmFqbmJ0M2R1b2Y1ODZpYWQ3MXBiYm9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [LEC](https://calendar.google.com/calendar/u/1?cid=aXAwMmdmOTk1MGxhaGxrcTM3MzhtanI2ZGtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
-- [LFL](https://calendar.google.com/calendar/u/1?cid=azJrcTh2a2RsdGVxaW5tYWlpNGwxNzRzYzBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [LFL](https://calendar.google.com/calendar/u/1?cid=NGhoZW85bWc2a2FvdmY5ZnNmcjFiNm5tNGdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 # Support
 Let [me know](https://github.com/ArnoutPullen/LolEsportsCalendar/issues/new?title=Feature%20Request:%20New%20Calendar) if you would like to see more calendars.
