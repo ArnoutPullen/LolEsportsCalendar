@@ -1,10 +1,9 @@
 ﻿using LolEsportsApiClient;
-using LolEsportsCalendar.LolEsports;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace LolEsportsCalendar
+namespace LolEsportsCalendar.Services
 {
 	public static class LolEsportsServiceCollection
 	{

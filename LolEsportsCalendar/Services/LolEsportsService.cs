@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LolEsportsCalendar.LolEsports
+namespace LolEsportsCalendar.Services
 {
 	public class LolEsportsService
 	{

@@ -1,4 +1,4 @@
-﻿namespace LolEsportsCalendar
+﻿namespace LolEsportsCalendar.Services
 {
 	public class LolEsportsOptions
 	{

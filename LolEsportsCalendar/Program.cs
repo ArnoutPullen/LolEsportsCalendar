@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using LolEsportsCalendar.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,7 +26,7 @@ namespace LolEsportsCalendar
 				config.AddConsole().AddConfiguration(configuration.GetSection("Logging"));
 			});
 
-			// Configure servicesd
+			// Configure services
 			ConfigureServices(serviceCollection, configuration);
 
 			// Run
