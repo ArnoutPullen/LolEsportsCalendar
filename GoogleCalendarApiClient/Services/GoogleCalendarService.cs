@@ -79,6 +79,8 @@ namespace LolEsportsCalendar.GoogleCalendar
 
 		public Event ConvertEsportEventToGoogleEvent(EsportEvent esportEvent)
 		{
+			if (esportEvent.Match == null) throw new MissingMemberException("EsportEvent is missing match property");
+
 			Event @event = new Event()
 			{
 				Id = esportEvent.Match.Id,
