@@ -14,7 +14,7 @@ Click one of the links below to integrate the calendar in your own.
 - [LPL](https://calendar.google.com/calendar/u/1?cid=b2Rza3BidDhscnVhdnF0bzBlajJoNGNscWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 ## Europe
-- [European Masters](https://calendar.google.com/calendar/u/1?cid=djhxYmFqbmJ0M2R1b2Y1ODZpYWQ3MXBiYm9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [EMEA Masters](https://calendar.google.com/calendar/u/1?cid=djhxYmFqbmJ0M2R1b2Y1ODZpYWQ3MXBiYm9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [LEC](https://calendar.google.com/calendar/u/1?cid=aXAwMmdmOTk1MGxhaGxrcTM3MzhtanI2ZGtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [LFL](https://calendar.google.com/calendar/u/1?cid=NGhoZW85bWc2a2FvdmY5ZnNmcjFiNm5tNGdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
