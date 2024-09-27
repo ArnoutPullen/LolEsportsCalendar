@@ -8,7 +8,7 @@ namespace GoogleCalendarApiClient.Services
 {
     public class GoogleCalendarService
     {
-        private readonly Dictionary<string, string> calendarLookup = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> calendarLookup = [];
         private readonly CalendarsService _calendarsService;
         private readonly CalendarListService _calendarListService;
         private readonly ILogger<GoogleCalendarService> _logger;
@@ -53,21 +53,21 @@ namespace GoogleCalendarApiClient.Services
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Error while creating calendar", calendar.Summary);
+                _logger.LogError(exception, "Error while creating calendar: {CalendarSummary}", calendar.Summary);
             }
 
             if (newCalendar != null)
             {
-                _logger.LogInformation("Created calendar {0}", calendar.Summary);
+                _logger.LogInformation("Created calendar {CalendarSummary}", calendar.Summary);
                 calendarLookup.Add(calendar.Summary, calendar.Id);
             }
 
             return newCalendar;
         }
 
-        public Calendar ConvertLeagueToCalendar(League league)
+        public static Calendar ConvertLeagueToCalendar(League league)
         {
-            Calendar calendar = new Calendar
+            Calendar calendar = new()
             {
                 Summary = league.Name,
                 Description = league.Name + " / " + league.Region,
@@ -76,15 +76,15 @@ namespace GoogleCalendarApiClient.Services
             return calendar;
         }
 
-        public Event ConvertEsportEventToGoogleEvent(EsportEvent esportEvent)
+        public static Event ConvertEsportEventToGoogleEvent(EsportEvent esportEvent)
         {
             if (esportEvent.Match == null) throw new MissingMemberException("EsportEvent is missing match property");
 
-            Event @event = new Event()
+            Event @event = new()
             {
                 Id = esportEvent.Match.Id,
-                Start = new EventDateTime { DateTime = esportEvent.StartTime.UtcDateTime },
-                End = new EventDateTime { DateTime = esportEvent.StartTime.UtcDateTime.AddHours(1) },
+                Start = new EventDateTime { DateTimeDateTimeOffset = esportEvent.StartTime.UtcDateTime },
+                End = new EventDateTime { DateTimeDateTimeOffset = esportEvent.StartTime.UtcDateTime.AddHours(1) },
                 Summary = esportEvent.Match.Teams[0].Code + " vs " + esportEvent.Match.Teams[1].Code
             };
 

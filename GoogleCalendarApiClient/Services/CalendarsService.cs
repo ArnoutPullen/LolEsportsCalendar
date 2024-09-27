@@ -6,32 +6,24 @@ using static Google.Apis.Calendar.v3.CalendarsResource;
 
 namespace GoogleCalendarApiClient.Services
 {
-	public class CalendarsService
+	public class CalendarsService(CalendarService calendarService, ILogger<CalendarsService> logger)
     {
-        private readonly CalendarService _service;
-        private readonly ILogger<CalendarsService> _logger;
-
-        public CalendarsService(CalendarService calendarService, ILogger<CalendarsService> logger)
-        {
-            _service = calendarService;
-            _logger = logger;
-        }
 
         /// <summary>Returns metadata for a calendar.
-		/// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/get"/>
-		/// </summary>
+        /// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/get"/>
+        /// </summary>
         public Calendar Get(string calendarId)
         {
             Calendar calendar = null;
 
             try
             {
-                GetRequest getRequest = _service.Calendars.Get(calendarId);
+                GetRequest getRequest = calendarService.Calendars.Get(calendarId);
                 calendar = getRequest.Execute();
             }
 			catch (Exception exception)
             {
-                _logger.LogError(exception, "Error while getting Calendar with id {0}", calendarId);
+                logger.LogError(exception, "Error while getting Calendar with id {CalendarId}", calendarId);
             }
 
             return calendar;
@@ -42,7 +34,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
         public Calendar Insert(Calendar calendar)
         {
-            InsertRequest insertRequest = _service.Calendars.Insert(calendar);
+            InsertRequest insertRequest = calendarService.Calendars.Insert(calendar);
             Calendar newCalendar = insertRequest.Execute();
 
             return newCalendar;
@@ -70,7 +62,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
         public Calendar Update(Calendar calendar, string calendarId)
         {
-            UpdateRequest updateRequest = _service.Calendars.Update(calendar, calendarId);
+            UpdateRequest updateRequest = calendarService.Calendars.Update(calendar, calendarId);
             Calendar updatedCalendar = updateRequest.Execute();
 
             return updatedCalendar;
@@ -81,7 +73,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
         public Calendar Patch(Calendar calendar, string calendarId)
         {
-            PatchRequest patchRequest = _service.Calendars.Patch(calendar, calendarId);
+            PatchRequest patchRequest = calendarService.Calendars.Patch(calendar, calendarId);
             Calendar patchedCalendar = patchRequest.Execute();
 
             return patchedCalendar;
@@ -92,7 +84,7 @@ namespace GoogleCalendarApiClient.Services
         /// </summary>
         public string Clear(string calendarId)
         {
-            ClearRequest clearRequest = _service.Calendars.Clear(calendarId);
+            ClearRequest clearRequest = calendarService.Calendars.Clear(calendarId);
             string cleared = clearRequest.Execute();
 
             return cleared;
@@ -103,7 +95,7 @@ namespace GoogleCalendarApiClient.Services
         /// </summary>
         public string Delete(string calendarId)
         {
-            DeleteRequest deleteRequest = _service.Calendars.Delete(calendarId);
+            DeleteRequest deleteRequest = calendarService.Calendars.Delete(calendarId);
             string deleted = deleteRequest.Execute();
 
             return deleted;

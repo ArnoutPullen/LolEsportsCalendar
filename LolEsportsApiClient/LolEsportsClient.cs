@@ -33,7 +33,7 @@ namespace LolEsportsApiClient
 
 			foreach (League league in _leagues)
 			{
-                if (league.Name == leagueName || league.Slug == leagueName.ToLower())
+                if (league.Name == leagueName || league.Slug.Equals(leagueName, System.StringComparison.CurrentCultureIgnoreCase))
                 {
                     return league;
 				}
@@ -51,8 +51,8 @@ namespace LolEsportsApiClient
 
         public async Task<LolEsportsScheduleResponseData> GetScheduleByLeagueAsync(League league, string page)
         {
-			Dictionary<string, string> query = new Dictionary<string, string>
-			{
+			Dictionary<string, string> query = new()
+            {
 				{ "leagueId", league.Id }
 			};
 
@@ -77,11 +77,11 @@ namespace LolEsportsApiClient
             return data.Data;
         }
 
-        private string DictionaryToQueryString(Dictionary<string, string> query = null)
+        private static string DictionaryToQueryString(Dictionary<string, string> query = null)
         {
             NameValueCollection queryString = HttpUtility.ParseQueryString(string.Empty);
 
-            query ??= new Dictionary<string, string>();
+            query ??= [];
 
             queryString.Add("hl", "en-GB");
 

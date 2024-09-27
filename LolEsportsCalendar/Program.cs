@@ -13,7 +13,7 @@ namespace LolEsportsCalendar
 		static async Task Main()
 		{
 			// Get app configuration
-			ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+			ConfigurationBuilder configurationBuilder = new();
 			var configuration = configurationBuilder.AddJsonFile("appsettings.json").Build();
 
 			// Collect app services

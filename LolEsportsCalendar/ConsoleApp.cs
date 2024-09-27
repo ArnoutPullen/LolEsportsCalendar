@@ -5,26 +5,17 @@ using System.Threading.Tasks;
 
 namespace LolEsportsCalendar
 {
-	class ConsoleApp
-	{
-		private readonly LolEsportsService _lolEsportsService;
-		private readonly ILogger<ConsoleApp> _logger;
-
-		public ConsoleApp(LolEsportsService lolEsportsService, ILogger<ConsoleApp> logger)
-		{
-			_lolEsportsService = lolEsportsService;
-			_logger = logger;
-		}
-
-		public async Task RunAsync()
+	class ConsoleApp(LolEsportsService lolEsportsService, ILogger<ConsoleApp> logger)
+    {
+        public async Task RunAsync()
 		{
 			try
 			{
-				await _lolEsportsService.ImportEvents();
+				await lolEsportsService.ImportEvents();
 			}
 			catch (Exception exception)
 			{
-				_logger.LogError(exception, "Error while importing events");
+				logger.LogError(exception, "Error while importing events");
 			}
 		}
 	}

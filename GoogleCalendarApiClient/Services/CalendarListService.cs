@@ -6,23 +6,14 @@ using static Google.Apis.Calendar.v3.CalendarListResource;
 
 namespace GoogleCalendarApiClient.Services
 {
-	public class CalendarListService
-	{
-		private readonly CalendarService _service;
-		private readonly ILogger<CalendarListService> _logger;
-
-		public CalendarListService(CalendarService calendarService, ILogger<CalendarListService> logger)
+	public class CalendarListService(CalendarService calendarService, ILogger<CalendarListService> logger)
+    {
+        /// <summary>Returns the calendars on the user's calendar list.
+        /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/list"/>
+        /// </summary>
+        public CalendarList List()
 		{
-			_service = calendarService;
-			_logger = logger;
-		}
-
-		/// <summary>Returns the calendars on the user's calendar list.
-		/// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/list"/>
-		/// </summary>
-		public CalendarList List()
-		{
-			ListRequest listRequest = _service.CalendarList.List();
+			ListRequest listRequest = calendarService.CalendarList.List();
 			CalendarList calendarList = listRequest.Execute();
 
 			return calendarList;
@@ -37,12 +28,12 @@ namespace GoogleCalendarApiClient.Services
 
 			try
 			{
-				GetRequest getRequest = _service.CalendarList.Get(calendarId);
+				GetRequest getRequest = calendarService.CalendarList.Get(calendarId);
 				calendarListEntry = getRequest.Execute();
 			}
 			catch (Exception exception)
 			{
-				_logger.LogError(exception, "Error while getting CalendarListEntry with id {0}", calendarId);
+				logger.LogError(exception, "Error while getting CalendarListEntry with id {CalendarId}", calendarId);
 			}
 
 			return calendarListEntry;
@@ -53,7 +44,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
 		public Channel Watch(Channel body)
 		{
-			WatchRequest watchRequest = _service.CalendarList.Watch(body);
+			WatchRequest watchRequest = calendarService.CalendarList.Watch(body);
 			Channel channel = watchRequest.Execute();
 
 			return channel;
@@ -64,7 +55,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
 		public CalendarListEntry Insert(CalendarListEntry calendar)
 		{
-			InsertRequest insertRequest = _service.CalendarList.Insert(calendar);
+			InsertRequest insertRequest = calendarService.CalendarList.Insert(calendar);
 			var calendarListEntry = insertRequest.Execute();
 
 			return calendarListEntry;
@@ -91,7 +82,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
 		public CalendarListEntry Update(CalendarListEntry calendar, string calendarId)
 		{
-			UpdateRequest updateRequest = _service.CalendarList.Update(calendar, calendarId);
+			UpdateRequest updateRequest = calendarService.CalendarList.Update(calendar, calendarId);
 			CalendarListEntry calendarListEntry = updateRequest.Execute();
 
 			return calendarListEntry;
@@ -102,7 +93,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
 		public CalendarListEntry Patch(CalendarListEntry calendar, string calendarId)
 		{
-			PatchRequest patchRequest = _service.CalendarList.Patch(calendar, calendarId);
+			PatchRequest patchRequest = calendarService.CalendarList.Patch(calendar, calendarId);
 			CalendarListEntry calendarListEntry = patchRequest.Execute();
 
 			return calendarListEntry;
@@ -113,7 +104,7 @@ namespace GoogleCalendarApiClient.Services
 		/// </summary>
 		public string Delete(string calendarId)
 		{
-			DeleteRequest deleteRequest = _service.CalendarList.Delete(calendarId);
+			DeleteRequest deleteRequest = calendarService.CalendarList.Delete(calendarId);
 			string deleted = deleteRequest.Execute();
 
 			return deleted;

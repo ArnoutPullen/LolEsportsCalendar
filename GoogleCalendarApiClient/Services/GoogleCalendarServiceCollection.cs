@@ -40,7 +40,7 @@ namespace GoogleCalendarApiClient.Services
 
             return await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 googleClientSecrets.Secrets,
-                new string[] { CalendarService.Scope.Calendar, CalendarService.Scope.CalendarEvents },
+                [CalendarService.Scope.Calendar, CalendarService.Scope.CalendarEvents],
                 "user",
                 CancellationToken.None,
                 new FileDataStore("token.json", true));
