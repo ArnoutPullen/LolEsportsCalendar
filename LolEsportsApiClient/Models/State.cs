@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LolEsportsApiClient.Models
+﻿namespace LolEsportsApiClient.Models
 {
 	public enum State { completed, inProgress, unstarted };
 }

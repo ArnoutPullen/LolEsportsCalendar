@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 
 namespace LolEsportsApiClient.Models
 {
+    [DebuggerDisplay("{Code,nq} - {Name,nq}")]
 	public partial class Team
     {
         [JsonProperty("name")]

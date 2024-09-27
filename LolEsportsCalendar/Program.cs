@@ -1,4 +1,5 @@
-﻿using LolEsportsCalendar.Services;
+﻿using GoogleCalendarApiClient.Services;
+using LolEsportsCalendar.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace LolEsportsCalendar
 {
-	class Program
+    class Program
 	{
-		static async Task Main(string[] args)
+		static async Task Main()
 		{
 			// Get app configuration
 			ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();

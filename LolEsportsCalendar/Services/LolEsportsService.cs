@@ -3,7 +3,6 @@ using Google.Apis.Calendar.v3.Data;
 using GoogleCalendarApiClient.Services;
 using LolEsportsApiClient;
 using LolEsportsApiClient.Models;
-using LolEsportsCalendar.GoogleCalendar;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LolEsportsCalendar.Services
 {
-	public class LolEsportsService
+    public class LolEsportsService
 	{
 		private readonly LolEsportsClient _lolEsportsClient;
 		private readonly LolEsportsOptions _options;
@@ -48,11 +47,11 @@ namespace LolEsportsCalendar.Services
 			{
 				foreach(var leagueName in leagueNames)
 				{
-					Calendar calendar = FindOrCreateCalendarByLeagueName(leagueName);
+					Calendar calendar = await FindOrCreateCalendarByLeagueName(leagueName);
 
 					if (calendar != null)
 					{
-						League league = _lolEsportsClient.GetLeagueByName(leagueName);
+						League league = await _lolEsportsClient.GetLeagueByName(leagueName);
 
 						if (league == null)
                         {
@@ -80,7 +79,7 @@ namespace LolEsportsCalendar.Services
 
 				foreach (League league in leagues)
 				{
-					Calendar calendar = FindOrCreateCalendarByLeagueName(league.Name);
+					Calendar calendar = await FindOrCreateCalendarByLeagueName(league.Name);
 
 					if (calendar != null)
 					{
@@ -99,22 +98,34 @@ namespace LolEsportsCalendar.Services
 			}
 		}
 
-		public async Task ImportEventsForLeagueAsync(League league, Calendar calendar)
+		public async Task ImportEventsForLeagueAsync(League league, Calendar calendar, string page = null)
 		{
 			try
 			{
-				// Get scheduled events of league
-				List<EsportEvent> esportEvents = await _lolEsportsClient.GetScheduleByLeagueAsync(league);
+				LolEsportsScheduleResponseData data = null;
 
-				foreach (EsportEvent esportEvent in esportEvents)
-				{
-					// Convert LeagueEvent to GoogleEvent
-					Event googleEvent = _googleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
+				do
+                {
+                    // Get scheduled events of league
+                    data = await _lolEsportsClient.GetScheduleByLeagueAsync(league, page);
 
-					// Insert or Update GoogleEvent
-					_eventsService.InsertOrUpdate(googleEvent, calendar, googleEvent.Id); // TODO
-				}
-			}
+                    foreach (EsportEvent esportEvent in data.Schedule.Events)
+                    {
+                        if (null == esportEvent.Match.Id)
+                        {
+                            _logger.LogError("Error esport event.match.id null");
+                            continue;
+                        }
+                        // Convert LeagueEvent to GoogleEvent
+                        Event googleEvent = _googleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
+
+                        // Insert or Update GoogleEvent
+                        _eventsService.InsertOrUpdate(googleEvent, calendar, googleEvent.Id); // TODO
+                    }
+
+                    page = data.Schedule.Pages.Newer;
+                } while (data.Schedule.Pages.Newer != null);
+            }
 			catch (GoogleApiException exception)
 			{
 				// :( Google can't handle all requests
@@ -143,7 +154,7 @@ namespace LolEsportsCalendar.Services
 			_logger.LogInformation("Events imported for league {0}", league.Name);
 		}
 
-		public Calendar FindOrCreateCalendarByLeagueName(string leagueName)
+		public async Task<Calendar> FindOrCreateCalendarByLeagueName(string leagueName)
 		{
 			Calendar calendar = null;
 			string calendarId = null;
@@ -152,7 +163,7 @@ namespace LolEsportsCalendar.Services
 			var calendars = _googleCalendarService.GetCalendarLookup();
 
 			// Get league
-			League league = _lolEsportsClient.GetLeagueByName(leagueName);
+			League league = await _lolEsportsClient.GetLeagueByName(leagueName);
 
 			if (league == null)
 			{

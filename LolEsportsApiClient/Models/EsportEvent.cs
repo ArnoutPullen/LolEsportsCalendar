@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 
 namespace LolEsportsApiClient.Models
 {
-	public partial class EsportEvent
+    [DebuggerDisplay("{BlockName,nq} - {League.Name,nq}")]
+    public partial class EsportEvent
     {
         [JsonProperty("id")]
         public string Id { get; set; }

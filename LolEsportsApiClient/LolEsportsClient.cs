@@ -27,12 +27,9 @@ namespace LolEsportsApiClient
             return _leagues;
         }
 
-        public League GetLeagueByName(string leagueName)
+        public async Task<League> GetLeagueByName(string leagueName)
         {
-            if (_leagues == null)
-            {
-                _leagues = GetLeaguesAsync().GetAwaiter().GetResult();
-            }
+            _leagues ??= await GetLeaguesAsync();
 
 			foreach (League league in _leagues)
 			{
@@ -52,16 +49,19 @@ namespace LolEsportsApiClient
             return leaguesResponseData.Schedule.Events;
         }
 
-        public async Task<List<EsportEvent>> GetScheduleByLeagueAsync(League league)
+        public async Task<LolEsportsScheduleResponseData> GetScheduleByLeagueAsync(League league, string page)
         {
 			Dictionary<string, string> query = new Dictionary<string, string>
 			{
 				{ "leagueId", league.Id }
 			};
 
-			var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query));
+            if (!string.IsNullOrEmpty(page))
+            {
+                query.Add("pageToken", page);
+            }
 
-            return leaguesResponseData.Schedule.Events;
+            return await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query));
         }
 
         private async Task<T> GetDataAsync<T>(string path)
@@ -81,10 +81,7 @@ namespace LolEsportsApiClient
         {
             NameValueCollection queryString = HttpUtility.ParseQueryString(string.Empty);
 
-            if (query == null)
-            {
-                query = new Dictionary<string, string>();
-            }
+            query ??= new Dictionary<string, string>();
 
             queryString.Add("hl", "en-GB");
 
