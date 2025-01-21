@@ -8,6 +8,9 @@ Click one of the links below to integrate the calendar in your own.
 ## America
 - [LCS](https://calendar.google.com/calendar/u/0?cid=M2g4ZXBiaGtrZms2OGJqajE2ZjNhOHVyZjhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [CBLOL](https://calendar.google.com/calendar/u/0?cid=NGl2azczcWs4MzdubWNuN3ZnaTZsMXZncG9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [LTA North](https://calendar.google.com/calendar/u/0?cid=N2I5YzAyMTgwYzljN2NkZGYyOGIzZjFmYTliZmY4OTg0NWU0Mzg0ODcxODcwM2Q3MzdhZTg4YmY4OTg3YjRlNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [LTA South](https://calendar.google.com/calendar/u/0?cid=ODI4NTEwMGRkMmFlOThlODJkZjcxNTQ1MmRmMDMxNzliYjUwZjliNjkwN2RlNDE4NDNiNmZkNTlmODk1OTE2N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [LTA Cross-Conference](https://calendar.google.com/calendar/u/0?cid=ZWYyNzJiNWRmZjk4ZWY2MjYxYTE5MDg5M2VjZjNhNjQzMWY4ZDQ5N2Y1ZDgxZThkYmE3OTQ1OGFkNDk5NTY2N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 
 ## Asia
 - [LCK](https://calendar.google.com/calendar/u/0?cid=aDRmbnA0aDJrZXR0aDRsaWpmbDYwbmZ0cmtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
