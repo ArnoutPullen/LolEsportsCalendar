@@ -342,4 +342,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/LolEsportsCalendar/token.json/token.json
+/LolEsportsCalendar/token.json/Google.Apis.Auth.OAuth2.Responses.TokenResponse-user
