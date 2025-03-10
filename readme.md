@@ -4,6 +4,7 @@ Click one of the links below to integrate the calendar in your own.
 ## International
 - [Worlds](https://calendar.google.com/calendar/u/0?cid=ZjA0Z2Jhc29haGhwOWF2dDE0YnJnMnNtOGdAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [MSI](https://calendar.google.com/calendar/u/0?cid=bXV2Y2NxNzA1ZTljdnFocnBtYjB1NHU4c2NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [First Stand](https://calendar.google.com/calendar/u/0?cid=OTBmYjMwY2I5MzJkOGUwNzUzYjAyODRlOWRlMjE0ODE2N2RlNzVjNjMxNGQzNzhmNDZlYTA5Yzk3MTgzMzQyZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 
 ## America
 - [LCS](https://calendar.google.com/calendar/u/0?cid=M2g4ZXBiaGtrZms2OGJqajE2ZjNhOHVyZjhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
