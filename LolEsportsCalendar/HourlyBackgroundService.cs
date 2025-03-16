@@ -1,6 +1,7 @@
 ﻿using LolEsportsCalendar.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,6 +41,7 @@ class HourlyBackgroundService(ILogger<HourlyBackgroundService> logger,
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Background Hosted Service is stopping.");
+        Log.CloseAndFlush();
         await Task.CompletedTask;
     }
 

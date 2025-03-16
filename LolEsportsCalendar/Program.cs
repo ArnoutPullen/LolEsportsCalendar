@@ -6,13 +6,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 var builder = Host.CreateApplicationBuilder();
-builder.Configuration.AddJsonFile("appsettings.json");
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-// Configure logging
 builder.Services.AddLogging(config => {
-	config.AddConsole().AddConfiguration(builder.Configuration.GetSection("Logging"));
+	config.ClearProviders();
+    config.AddSerilog(new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration) // Read from appsettings.json
+        .CreateLogger());
 });
 
 builder.Services.AddOptions<LolEsportsOptions>().BindConfiguration("LolEsports").ValidateOnStart();
