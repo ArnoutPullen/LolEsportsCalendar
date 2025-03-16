@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LolEsportsCalendar;
 
-class BackgroundHostedService(ILogger<BackgroundHostedService> logger,
+class HourlyBackgroundService(ILogger<HourlyBackgroundService> logger,
     LolEsportsService lolEsportsService) : IHostedService, IDisposable
 {
     private readonly PeriodicTimer periodicTimer = new(TimeSpan.FromHours(1));

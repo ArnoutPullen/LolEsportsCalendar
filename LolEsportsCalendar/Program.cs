@@ -19,7 +19,7 @@ builder.Services.AddOptions<LolEsportsOptions>().BindConfiguration("LolEsports")
 
 // Configure services
 builder.Services.AddGoogleCalendarService();
-builder.Services.AddHostedService<BackgroundHostedService>();
+builder.Services.AddHostedService<HourlyBackgroundService>();
 builder.Services.AddLeagueEsportService(builder.Configuration.GetSection("LolEsports"));
 
 // Run
