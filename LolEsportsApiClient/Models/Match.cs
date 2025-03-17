@@ -6,7 +6,7 @@ namespace LolEsportsApiClient.Models
 	public partial class Match
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [JsonProperty("flags")]
         public List<Flag> Flags { get; set; }

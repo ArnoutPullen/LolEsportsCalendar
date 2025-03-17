@@ -11,7 +11,7 @@ namespace LolEsportsApiClient;
 public class LolEsportsClient
 {
     private readonly HttpClient _httpClient;
-    private List<League> _leagues = null;
+    private List<League>? _leagues = null;
 
     public LolEsportsClient(HttpClient httpClient)
     {
@@ -28,7 +28,7 @@ public class LolEsportsClient
         return _leagues;
     }
 
-    public async Task<League> GetLeagueByName(string leagueName, CancellationToken cancellationToken = default)
+    public async Task<League?> GetLeagueByName(string leagueName, CancellationToken cancellationToken = default)
     {
         _leagues ??= await GetLeaguesAsync(cancellationToken);
 
@@ -50,7 +50,7 @@ public class LolEsportsClient
         return leaguesResponseData.Schedule.Events;
     }
 
-    public async Task<LolEsportsScheduleResponseData> GetScheduleByLeagueAsync(League league, string page, CancellationToken cancellationToken = default)
+    public async Task<LolEsportsScheduleResponseData> GetScheduleByLeagueAsync(League league, string? page, CancellationToken cancellationToken = default)
     {
         Dictionary<string, string> query = new()
         {
@@ -78,7 +78,7 @@ public class LolEsportsClient
         return data.Data;
     }
 
-    private static string DictionaryToQueryString(Dictionary<string, string> query = null)
+    private static string DictionaryToQueryString(Dictionary<string, string>? query = null)
     {
         NameValueCollection queryString = HttpUtility.ParseQueryString(string.Empty);
 

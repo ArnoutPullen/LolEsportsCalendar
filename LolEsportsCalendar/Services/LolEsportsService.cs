@@ -27,7 +27,7 @@ public class LolEsportsService(
 
     public async Task ImportEvents(CancellationToken cancellationToken = default)
     {
-        string[] leagueNames = _options.Leagues;
+        string[]? leagueNames = _options.Leagues;
 
         if (leagueNames != null)
         {
@@ -37,7 +37,7 @@ public class LolEsportsService(
 
                 if (calendar != null)
                 {
-                    League league = await lolEsportsClient.GetLeagueByName(leagueName, cancellationToken);
+                    League? league = await lolEsportsClient.GetLeagueByName(leagueName, cancellationToken);
 
                     if (league == null)
                     {
@@ -151,7 +151,7 @@ public class LolEsportsService(
         var calendars = googleCalendarService.GetCalendarLookup();
 
         // Get league
-        League league = await lolEsportsClient.GetLeagueByName(leagueName, cancellationToken);
+        League? league = await lolEsportsClient.GetLeagueByName(leagueName, cancellationToken);
 
         if (league == null)
         {
