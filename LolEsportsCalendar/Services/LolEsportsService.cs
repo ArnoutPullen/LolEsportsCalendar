@@ -145,7 +145,6 @@ public class LolEsportsService(
 
     public async Task<Calendar?> FindOrCreateCalendarByLeagueName(string leagueName, CancellationToken cancellationToken = default)
     {
-        Calendar? calendar;
         string? calendarId = null;
 
         // Get calendars
@@ -173,18 +172,16 @@ public class LolEsportsService(
             }
         }
 
-        // Get existing calendar
-        if (calendarId == null) throw new NullReferenceException(nameof(calendarId));
+        if (calendarId == null)
+        {
+            // Creat new calendar
+            logger.LogInformation("Creating new calendar {LeagueName}", league.Name);
+            Calendar newCalendar = ConvertLeagueToCalendar(league);
 
-        calendar = calendarsService.Get(calendarId);
+            return calendarsService.Insert(newCalendar);
+        }
 
-        if (calendar != null) return calendar;
-
-        // Creat new calendar
-        logger.LogInformation("Creating new calendar {LeagueName}", league.Name);
-        Calendar newCalendar = ConvertLeagueToCalendar(league);
-
-        return calendarsService.Insert(newCalendar);
+        return calendarsService.Get(calendarId);
     }
 
     public static Calendar ConvertLeagueToCalendar(League league)
