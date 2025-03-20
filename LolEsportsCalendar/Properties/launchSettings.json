@@ -1,13 +1,16 @@
 {
   "profiles": {
     "LolEsportsCalendar": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "ASPNETCORE_ENVIRONMENT": "Development"
     },
     "Docker": {
-      "commandName": "Docker"
+      "commandName": "Docker",
+      "ASPNETCORE_ENVIRONMENT": "Production"
     },
     "Profile 1": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "ASPNETCORE_ENVIRONMENT": "Development"
     }
   }
 }
