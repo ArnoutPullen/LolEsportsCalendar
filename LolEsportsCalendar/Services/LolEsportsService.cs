@@ -57,7 +57,6 @@ public class LolEsportsService(
         }
 
         logger.LogInformation("All events imported");
-        Console.ReadLine();
     }
 
     public async Task ImportEventsForAllCalendarsAsync(CancellationToken cancellationToken = default)
@@ -76,7 +75,7 @@ public class LolEsportsService(
                     await ImportEventsForLeagueAsync(league, calendar, cancellationToken: cancellationToken);
 
                     // Wait 1 sec
-                    Thread.Sleep(60);
+                    await Task.Delay(60, cancellationToken);
                 }
 
             }
@@ -127,7 +126,7 @@ public class LolEsportsService(
                 if (_rateLimitExceededCount < 8)
                 {
                     // Wait
-                    Thread.Sleep(60 * _rateLimitExceededCount);
+                    await Task.Delay(60 * _rateLimitExceededCount, cancellationToken);
 
                     // Retry
                     await ImportEventsForLeagueAsync(league, calendar, cancellationToken: cancellationToken);

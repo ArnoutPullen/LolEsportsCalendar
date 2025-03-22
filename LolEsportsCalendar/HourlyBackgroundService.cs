@@ -41,8 +41,7 @@ class HourlyBackgroundService(ILogger<HourlyBackgroundService> logger,
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Background Hosted Service is stopping.");
-        Log.CloseAndFlush();
-        await Task.CompletedTask;
+        await Log.CloseAndFlushAsync();
     }
 
     public void Dispose()
