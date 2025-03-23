@@ -1,4 +1,3 @@
-﻿namespace LolEsportsApiClient.Models
-{
-	public enum Status { forceSelected, hidden, notSelected, selected };
-}
+﻿namespace LolEsportsApiClient.Models;
+
+public enum Status { forceSelected, hidden, notSelected, selected };

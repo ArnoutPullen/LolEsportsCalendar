@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace LolEsportsApiClient.Models
+namespace LolEsportsApiClient.Models;
+
+public partial class Tournament
 {
-	public partial class Tournament
-    {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-    }
+    [JsonProperty("id")]
+    public required string Id { get; set; }
 }

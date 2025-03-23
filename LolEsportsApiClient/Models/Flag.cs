@@ -1,4 +1,3 @@
-﻿namespace LolEsportsApiClient.Models
-{
-	public enum Flag { hasVod, isSpoiler, hasRecap };
-}
+﻿namespace LolEsportsApiClient.Models;
+
+public enum Flag { hasVod, isSpoiler, hasRecap };

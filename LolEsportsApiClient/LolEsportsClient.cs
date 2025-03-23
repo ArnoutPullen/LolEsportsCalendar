@@ -23,9 +23,9 @@ public class LolEsportsClient
     {
         var leaguesResponseData = await GetDataAsync<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString(), cancellationToken);
 
-        _leagues = leaguesResponseData.Leagues;
+        _leagues = leaguesResponseData?.Leagues;
 
-        return _leagues;
+        return _leagues ?? [];
     }
 
     public async Task<League?> GetLeagueByName(string leagueName, CancellationToken cancellationToken = default)
@@ -47,10 +47,10 @@ public class LolEsportsClient
     {
         var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(), cancellationToken);
 
-        return leaguesResponseData.Schedule.Events;
+        return leaguesResponseData?.Schedule.Events ?? [];
     }
 
-    public async Task<LolEsportsScheduleResponseData> GetScheduleByLeagueAsync(League league, string? page, CancellationToken cancellationToken = default)
+    public async Task<LolEsportsScheduleResponseData?> GetScheduleByLeagueAsync(League league, string? page, CancellationToken cancellationToken = default)
     {
         Dictionary<string, string> query = new()
         {
@@ -65,7 +65,7 @@ public class LolEsportsClient
         return await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query), cancellationToken);
     }
 
-    private async Task<T> GetDataAsync<T>(string path, CancellationToken cancellationToken = default)
+    private async Task<T?> GetDataAsync<T>(string path, CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.GetAsync(path, cancellationToken);
 

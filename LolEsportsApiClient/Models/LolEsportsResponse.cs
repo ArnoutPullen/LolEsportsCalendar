@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace LolEsportsApiClient.Models
+namespace LolEsportsApiClient.Models;
+
+public partial class LolEsportsResponse<TResponseDataType>
 {
-	public partial class LolEsportsResponse<TResponseDataType>
-    {
-        [JsonProperty("data")]
-        public TResponseDataType Data { get; set; }
-    }
+    [JsonProperty("data")]
+    public TResponseDataType? Data { get; set; }
 }

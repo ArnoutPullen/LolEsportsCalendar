@@ -97,7 +97,7 @@ public class LolEsportsService(
                 // Get scheduled events of league
                 data = await lolEsportsClient.GetScheduleByLeagueAsync(league, page, cancellationToken);
 
-                foreach (EsportEvent esportEvent in data.Schedule.Events)
+                foreach (EsportEvent esportEvent in data?.Schedule.Events ?? [])
                 {
                     if (null == esportEvent.Match.Id)
                     {
@@ -111,8 +111,8 @@ public class LolEsportsService(
                     eventsService.InsertOrUpdate(googleEvent, calendar, googleEvent.Id); // TODO
                 }
 
-                page = data.Schedule.Pages.Newer;
-            } while (data.Schedule.Pages.Newer != null);
+                page = data?.Schedule.Pages?.Newer;
+            } while (data?.Schedule.Pages?.Newer != null);
         }
         catch (GoogleApiException exception)
         {

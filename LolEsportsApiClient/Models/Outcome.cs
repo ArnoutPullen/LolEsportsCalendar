@@ -1,4 +1,3 @@
-﻿namespace LolEsportsApiClient.Models
-{
-	public enum Outcome { loss, win };
-}
+﻿namespace LolEsportsApiClient.Models;
+
+public enum Outcome { loss, win };

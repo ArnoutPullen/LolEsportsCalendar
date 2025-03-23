@@ -1,4 +1,3 @@
-﻿namespace LolEsportsApiClient.Models
-{
-	public enum StrategyType { bestOf, playAll };
-}
+﻿namespace LolEsportsApiClient.Models;
+
+public enum StrategyType { bestOf, playAll };

@@ -1,4 +1,3 @@
-﻿namespace LolEsportsApiClient.Models
-{
-	public enum EventType { match, show };
-}
+﻿namespace LolEsportsApiClient.Models;
+
+public enum EventType { match, show };
