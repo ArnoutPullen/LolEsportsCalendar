@@ -18,12 +18,12 @@ builder.Services.AddLogging(config => {
         .CreateLogger());
 });
 
-builder.Services.AddOptions<LolEsportsOptions>().BindConfiguration("LolEsports").ValidateOnStart();
+builder.Services.AddOptions<LolEsportsOptions>().BindConfiguration(LolEsportsOptions.SectionName).ValidateOnStart();
 
 // Configure services
 builder.Services.AddGoogleCalendarService();
 builder.Services.AddHostedService<HourlyBackgroundService>();
-builder.Services.AddLeagueEsportService(builder.Configuration.GetSection("LolEsports"));
+builder.Services.AddLeagueEsportService(builder.Configuration.GetSection(LolEsportsOptions.SectionName));
 
 // Run
 await builder.Build().RunAsync();

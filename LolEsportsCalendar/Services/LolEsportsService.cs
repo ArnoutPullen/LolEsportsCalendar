@@ -22,12 +22,11 @@ public class LolEsportsService(
         IOptions<LolEsportsOptions> options
     )
 {
-    private readonly LolEsportsOptions _options = options.Value;
     private int _rateLimitExceededCount = 0;
 
     public async Task ImportEvents(CancellationToken cancellationToken = default)
     {
-        string[]? leagueNames = _options.Leagues;
+        string[]? leagueNames = options.Value.Leagues;
 
         if (leagueNames != null)
         {
