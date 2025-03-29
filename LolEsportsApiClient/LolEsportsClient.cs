@@ -34,6 +34,11 @@ public class LolEsportsClient(HttpClient httpClient)
         return null;
     }
 
+    public void ClearLeaguesCache()
+    {
+        _leagues = null;
+    }
+
     public async Task<List<EsportEvent>> GetScheduleAsync(CancellationToken cancellationToken = default)
     {
         var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(), cancellationToken);

@@ -175,8 +175,10 @@ public class LolEsportsService(
             // Creat new calendar
             logger.LogInformation("Creating new calendar {LeagueName}", league.Name);
             Calendar newCalendar = ConvertLeagueToCalendar(league);
+            Calendar calendar = calendarsService.Insert(newCalendar);
+            lolEsportsClient.ClearLeaguesCache();
 
-            return calendarsService.Insert(newCalendar);
+            return calendar;
         }
 
         return calendarsService.Get(calendarId);
