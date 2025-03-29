@@ -25,7 +25,8 @@ public class LolEsportsClient(HttpClient httpClient)
 
         foreach (League league in _leagues)
         {
-            if (league.Name == leagueName || league.Slug.Equals(leagueName, System.StringComparison.CurrentCultureIgnoreCase))
+            if (league.Name.Equals(leagueName, System.StringComparison.CurrentCultureIgnoreCase)
+                || league.Slug.Equals(leagueName, System.StringComparison.CurrentCultureIgnoreCase))
             {
                 return league;
             }
