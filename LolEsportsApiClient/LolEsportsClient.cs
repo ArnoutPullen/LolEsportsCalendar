@@ -8,24 +8,15 @@ using System.Web;
 
 namespace LolEsportsApiClient;
 
-public class LolEsportsClient
+public class LolEsportsClient(HttpClient httpClient)
 {
-    private readonly HttpClient _httpClient;
     private List<League>? _leagues = null;
-
-    public LolEsportsClient(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-        _leagues = GetLeaguesAsync().GetAwaiter().GetResult();
-    }
 
     public async Task<List<League>> GetLeaguesAsync(CancellationToken cancellationToken = default)
     {
         var leaguesResponseData = await GetDataAsync<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString(), cancellationToken);
 
-        _leagues = leaguesResponseData?.Leagues;
-
-        return _leagues ?? [];
+        return leaguesResponseData?.Leagues ?? [];
     }
 
     public async Task<League?> GetLeagueByName(string leagueName, CancellationToken cancellationToken = default)
@@ -54,8 +45,8 @@ public class LolEsportsClient
     {
         Dictionary<string, string> query = new()
         {
-                { "leagueId", league.Id }
-            };
+            { "leagueId", league.Id }
+        };
 
         if (!string.IsNullOrEmpty(page))
         {
@@ -67,7 +58,7 @@ public class LolEsportsClient
 
     private async Task<T?> GetDataAsync<T>(string path, CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync(path, cancellationToken);
+        var response = await httpClient.GetAsync(path, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
