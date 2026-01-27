@@ -1,0 +1,4 @@
+services:
+  lolesportscalendar:
+    environment:
+      - DOTNET_ENVIRONMENT=Development

@@ -8,6 +8,7 @@ credentials.json
 appsecrets.json
 appsettings.Development.json
 docker.txt
+.env
 
 # User-specific files
 *.rsuser

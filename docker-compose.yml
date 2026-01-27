@@ -1,0 +1,13 @@
+services:
+  lolesportscalendar:
+    image: ${DOCKER_REGISTRY-}lolesportscalendar
+    build:
+      context: .
+      dockerfile: LolEsportsCalendar/Dockerfile
+      tags:
+        - ${DOCKER_REGISTRY-}/lolesportscalendar:latest
+      x-bake:
+        platforms:
+          - linux/amd64
+          - linux/arm64
+          - linux/arm64/v8
