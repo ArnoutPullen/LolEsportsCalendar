@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ public class LolEsportsService(
     {
         string[]? leagueNames = options.Value.Leagues;
 
-        if (leagueNames != null)
+        if (leagueNames != null && leagueNames.Length != 0)
         {
             foreach (var leagueName in leagueNames)
             {
