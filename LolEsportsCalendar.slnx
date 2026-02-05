@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Packages.props" />
+    <File Path="docker.txt" />
+    <File Path="readme.md" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="GoogleCalendarApiClient/GoogleCalendarApiClient.csproj" />
+  <Project Path="LolEsportsApiClient/LolEsportsApiClient.csproj" />
+  <Project Path="LolEsportsCalendar/LolEsportsCalendar.csproj" />
+</Solution>
