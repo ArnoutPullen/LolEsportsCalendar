@@ -22,6 +22,7 @@ jobs:
         with:
           push: true
           context: .
+          file: ./LolEsportsCalendar/Dockerfile
           tags: |
             ${{ secrets.REGISTRY_DOMAIN }}/lolesportscalendar:latest
             ${{ secrets.REGISTRY_DOMAIN }}/lolesportscalendar:${{ github.event.release.tag_name }}
