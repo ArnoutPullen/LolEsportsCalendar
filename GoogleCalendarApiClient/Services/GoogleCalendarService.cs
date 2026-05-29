@@ -8,7 +8,7 @@ namespace GoogleCalendarApiClient.Services;
 
 public class GoogleCalendarService
 {
-    private Dictionary<string, string>? _calendarLookup = [];
+    private Dictionary<string, string>? _calendarLookup = null;
     private readonly CalendarsService _calendarsService;
     private readonly CalendarListService _calendarListService;
     private readonly ILogger<GoogleCalendarService> _logger;
