@@ -19,6 +19,14 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
         return calendarList;
     }
 
+    public CalendarList List(string nextPageToken)
+    {
+        ListRequest listRequest = calendarService.CalendarList.List();
+        listRequest.PageToken = nextPageToken;
+        CalendarList calendarList = listRequest.Execute();
+        return calendarList;
+    }
+
     /// <summary>Returns a calendar from the user's calendar list.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/get"/>
     /// </summary>

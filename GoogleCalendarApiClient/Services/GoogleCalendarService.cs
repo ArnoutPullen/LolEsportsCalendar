@@ -8,7 +8,7 @@ namespace GoogleCalendarApiClient.Services;
 
 public class GoogleCalendarService
 {
-    private readonly Dictionary<string, string> calendarLookup = [];
+    private Dictionary<string, string>? _calendarLookup = [];
     private readonly CalendarsService _calendarsService;
     private readonly CalendarListService _calendarListService;
     private readonly ILogger<GoogleCalendarService> _logger;
@@ -18,28 +18,44 @@ public class GoogleCalendarService
         _logger = logger;
         _calendarsService = calendarsService;
         _calendarListService = calendarListService;
-
-        BuildCalendarLookup();
     }
 
-    public void BuildCalendarLookup()
+    private Dictionary<string, string> BuildCalendarLookup()
     {
         // View
-        CalendarList calendarList = _calendarListService.List();
+        Dictionary<string, string> calendarLookup = [];
+        List<CalendarListEntry> calendarList = GetAllCalendars();
 
         // Add calendars to lookup
-        foreach (var calendar in calendarList.Items)
+        foreach (var calendar in calendarList)
         {
             if (!calendarLookup.ContainsKey(calendar.Summary))
             {
                 calendarLookup.Add(calendar.Summary, calendar.Id);
             }
         }
+
+        return calendarLookup;
+    }
+
+    private List<CalendarListEntry> GetAllCalendars()
+    {
+        List<CalendarListEntry> calendars = [];
+        CalendarList calendarList = _calendarListService.List();
+        calendars.AddRange(calendarList.Items);
+
+        while (calendarList.NextPageToken != null)
+        {
+            calendarList = _calendarListService.List(calendarList.NextPageToken);
+            calendars.AddRange(calendarList.Items);
+        }
+
+        return calendars;
     }
 
     public Dictionary<string, string> GetCalendarLookup()
     {
-        return calendarLookup;
+        return _calendarLookup ??= BuildCalendarLookup();
     }
 
     public Calendar? InsertLeagueAsCalendar(League league)
@@ -59,7 +75,8 @@ public class GoogleCalendarService
         if (newCalendar != null)
         {
             _logger.LogInformation("Created calendar {CalendarSummary}", calendar.Summary);
-            calendarLookup.Add(calendar.Summary, calendar.Id);
+            _calendarLookup ??= BuildCalendarLookup();
+            _calendarLookup.Add(calendar.Summary, calendar.Id);
         }
 
         return newCalendar;
