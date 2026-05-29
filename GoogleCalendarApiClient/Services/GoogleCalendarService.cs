@@ -3,6 +3,8 @@ using LolEsportsApiClient.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GoogleCalendarApiClient.Services;
 
@@ -20,11 +22,11 @@ public class GoogleCalendarService
         _calendarListService = calendarListService;
     }
 
-    private Dictionary<string, string> BuildCalendarLookup()
+    private async Task<Dictionary<string, string>> BuildCalendarLookupAsync(CancellationToken cancellationToken = default)
     {
         // View
         Dictionary<string, string> calendarLookup = [];
-        List<CalendarListEntry> calendarList = GetAllCalendars();
+        List<CalendarListEntry> calendarList = await GetAllCalendarsAsync(cancellationToken);
 
         // Add calendars to lookup
         foreach (var calendar in calendarList)
@@ -38,34 +40,34 @@ public class GoogleCalendarService
         return calendarLookup;
     }
 
-    private List<CalendarListEntry> GetAllCalendars()
+    private async Task<List<CalendarListEntry>> GetAllCalendarsAsync(CancellationToken cancellationToken = default)
     {
         List<CalendarListEntry> calendars = [];
-        CalendarList calendarList = _calendarListService.List();
+        CalendarList calendarList = await _calendarListService.ListAsync(cancellationToken);
         calendars.AddRange(calendarList.Items);
 
         while (calendarList.NextPageToken != null)
         {
-            calendarList = _calendarListService.List(calendarList.NextPageToken);
+            calendarList = await _calendarListService.ListAsync(calendarList.NextPageToken, cancellationToken);
             calendars.AddRange(calendarList.Items);
         }
 
         return calendars;
     }
 
-    public Dictionary<string, string> GetCalendarLookup()
+    public async Task<Dictionary<string, string>> GetCalendarLookupAsync(CancellationToken cancellationToken = default)
     {
-        return _calendarLookup ??= BuildCalendarLookup();
+        return _calendarLookup ??= await BuildCalendarLookupAsync(cancellationToken);
     }
 
-    public Calendar? InsertLeagueAsCalendar(League league)
+    public async Task<Calendar?> InsertLeagueAsCalendarAsync(League league, CancellationToken cancellationToken = default)
     {
         Calendar? newCalendar = null;
         Calendar calendar = ConvertLeagueToCalendar(league);
 
         try
         {
-            newCalendar = _calendarsService.Insert(calendar);
+            newCalendar = await _calendarsService.InsertAsync(calendar, cancellationToken);
         }
         catch (Exception exception)
         {
@@ -75,7 +77,7 @@ public class GoogleCalendarService
         if (newCalendar != null)
         {
             _logger.LogInformation("Created calendar {CalendarSummary}", calendar.Summary);
-            _calendarLookup ??= BuildCalendarLookup();
+            _calendarLookup ??= await BuildCalendarLookupAsync(cancellationToken);
             _calendarLookup.Add(calendar.Summary, calendar.Id);
         }
 

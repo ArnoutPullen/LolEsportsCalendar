@@ -2,6 +2,8 @@
 using Google.Apis.Calendar.v3.Data;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using static Google.Apis.Calendar.v3.CalendarListResource;
 
 namespace GoogleCalendarApiClient.Services;
@@ -11,33 +13,33 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// <summary>Returns the calendars on the user's calendar list.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/list"/>
     /// </summary>
-    public CalendarList List()
+    public async Task<CalendarList> ListAsync(CancellationToken cancellationToken = default)
     {
         ListRequest listRequest = calendarService.CalendarList.List();
-        CalendarList calendarList = listRequest.Execute();
+        CalendarList calendarList = await listRequest.ExecuteAsync(cancellationToken);
 
         return calendarList;
     }
 
-    public CalendarList List(string nextPageToken)
+    public async Task<CalendarList> ListAsync(string nextPageToken, CancellationToken cancellationToken = default)
     {
         ListRequest listRequest = calendarService.CalendarList.List();
         listRequest.PageToken = nextPageToken;
-        CalendarList calendarList = listRequest.Execute();
+        CalendarList calendarList = await listRequest.ExecuteAsync(cancellationToken);
         return calendarList;
     }
 
     /// <summary>Returns a calendar from the user's calendar list.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/get"/>
     /// </summary>
-    public CalendarListEntry? Get(string calendarId)
+    public async Task<CalendarListEntry?> GetAsync(string calendarId, CancellationToken cancellationToken = default)
     {
         CalendarListEntry? calendarListEntry = null;
 
         try
         {
             GetRequest getRequest = calendarService.CalendarList.Get(calendarId);
-            calendarListEntry = getRequest.Execute();
+            calendarListEntry = await getRequest.ExecuteAsync(cancellationToken);
         }
         catch (Exception exception)
         {
@@ -50,10 +52,10 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// <summary>Watch for changes to CalendarList resources. 
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/watch"/>
     /// </summary>
-    public Channel Watch(Channel body)
+    public async Task<Channel> Watch(Channel body, CancellationToken cancellationToken = default)
     {
         WatchRequest watchRequest = calendarService.CalendarList.Watch(body);
-        Channel channel = watchRequest.Execute();
+        Channel channel = await watchRequest.ExecuteAsync(cancellationToken);
 
         return channel;
     }
@@ -61,26 +63,26 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// <summary>Inserts an existing calendar into the user's calendar list.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/insert"/>
     /// </summary>
-    public CalendarListEntry Insert(CalendarListEntry calendar)
+    public async Task<CalendarListEntry> InsertAsync(CalendarListEntry calendar, CancellationToken cancellationToken = default)
     {
         InsertRequest insertRequest = calendarService.CalendarList.Insert(calendar);
-        var calendarListEntry = insertRequest.Execute();
+        var calendarListEntry = await insertRequest.ExecuteAsync(cancellationToken);
 
         return calendarListEntry;
     }
 
-    public CalendarListEntry InsertOrUpdate(CalendarListEntry calendar, string calendarId)
+    public async Task<CalendarListEntry> InsertOrUpdate(CalendarListEntry calendar, string calendarId, CancellationToken cancellationToken = default)
     {
         CalendarListEntry calendarListEntry;
-        CalendarListEntry? exists = Get(calendar.Id);
+        CalendarListEntry? exists = await GetAsync(calendar.Id, cancellationToken);
 
         if (exists == null)
         {
-            calendarListEntry = Insert(calendar);
+            calendarListEntry = await InsertAsync(calendar, cancellationToken);
         }
         else
         {
-            calendarListEntry = Update(calendar, calendarId);
+            calendarListEntry = await UpdateAsync(calendar, calendarId, cancellationToken);
         }
 
         return calendarListEntry;
@@ -89,10 +91,10 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// <summary>Updates an existing calendar on the user's calendar list.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/update"/>
     /// </summary>
-    public CalendarListEntry Update(CalendarListEntry calendar, string calendarId)
+    public async Task<CalendarListEntry> UpdateAsync(CalendarListEntry calendar, string calendarId, CancellationToken cancellationToken = default)
     {
         UpdateRequest updateRequest = calendarService.CalendarList.Update(calendar, calendarId);
-        CalendarListEntry calendarListEntry = updateRequest.Execute();
+        CalendarListEntry calendarListEntry = await updateRequest.ExecuteAsync(cancellationToken);
 
         return calendarListEntry;
     }
@@ -100,10 +102,10 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// <summary>Updates an existing calendar on the user's calendar list. This method supports patch semantics.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/patch"/>
     /// </summary>
-    public CalendarListEntry Patch(CalendarListEntry calendar, string calendarId)
+    public async Task<CalendarListEntry> PatchAsync(CalendarListEntry calendar, string calendarId, CancellationToken cancellationToken = default)
     {
         PatchRequest patchRequest = calendarService.CalendarList.Patch(calendar, calendarId);
-        CalendarListEntry calendarListEntry = patchRequest.Execute();
+        CalendarListEntry calendarListEntry = await patchRequest.ExecuteAsync(cancellationToken);
 
         return calendarListEntry;
     }
@@ -111,10 +113,10 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// <summary>Removes a calendar from the user's calendar list.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendarList/delete"/>
     /// </summary>
-    public string Delete(string calendarId)
+    public async Task<string> DeleteAsync(string calendarId, CancellationToken cancellationToken = default)
     {
         DeleteRequest deleteRequest = calendarService.CalendarList.Delete(calendarId);
-        string deleted = deleteRequest.Execute();
+        string deleted = await deleteRequest.ExecuteAsync(cancellationToken);
 
         return deleted;
     }

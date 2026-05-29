@@ -4,6 +4,8 @@ using Google.Apis.Calendar.v3.Data;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GoogleCalendarApiClient.Services;
 
@@ -12,23 +14,23 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
     /// <summary>Returns events on the specified calendar.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/events/insert"/>
     /// </summary>
-    public Events List(string calendarId)
+    public async Task<Events> ListAsync(string calendarId, CancellationToken cancellationToken = default)
     {
         EventsResource.ListRequest listRequest = calendarService.Events.List(calendarId);
-        return listRequest.Execute();
+        return await listRequest.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Returns an event.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/events/get"/>
     /// </summary>
-    public Event? Get(string calendarId, string eventId)
+    public async Task<Event?> GetAsync(string calendarId, string eventId, CancellationToken cancellationToken = default)
     {
         Event? _event = null;
 
         try
         {
             EventsResource.GetRequest getRequest = calendarService.Events.Get(calendarId, eventId);
-            _event = getRequest.Execute();
+            _event = await getRequest.ExecuteAsync(cancellationToken);
         }
         catch (GoogleApiException exception)
         {
@@ -52,20 +54,20 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
     /// <summary>Creates an event.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/events/insert"/>
     /// </summary>
-    public Event Insert(Event _event, Calendar calendar)
+    public async Task<Event> InsertAsync(Event _event, Calendar calendar, CancellationToken cancellationToken = default)
     {
         EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(_event, calendar.Id);
-        return insertRequest.Execute();
+        return await insertRequest.ExecuteAsync(cancellationToken);
     }
 
-    public Event InsertOrUpdate(Event _event, Calendar calendar, string eventId)
+    public async Task<Event> InsertOrUpdateAsync(Event _event, Calendar calendar, string eventId, CancellationToken cancellationToken = default)
     {
-        Event? existing = Get(calendar.Id, eventId);
+        Event? existing = await GetAsync(calendar.Id, eventId, cancellationToken);
 
         if (existing == null)
         {
             logger.LogInformation("Inserting Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
-            return Insert(_event, calendar);
+            return await InsertAsync(_event, calendar, cancellationToken);
         }
 
         // Compare events, only update when data changed
@@ -74,7 +76,7 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
         if (!equals)
         {
             logger.LogInformation("Updating Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
-            return Update(_event, calendar, eventId);
+            return await UpdateAsync(_event, calendar, eventId, cancellationToken);
         }
 
         // TODO: Show league name
@@ -142,12 +144,14 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
             if (expectedPropertyValue is EventDateTime expectedEventDateTime)
             {
                 EventDateTime? actualEventDateTime = (EventDateTime?)actualPropertyValue;
-                if (actualEventDateTime == null) {
+                if (actualEventDateTime == null)
+                {
                     equals = false;
                     break;
                 }
                 DateTimeOffset? actualDateTime = actualEventDateTime?.DateTimeDateTimeOffset;
-                if (actualDateTime == null) {
+                if (actualDateTime == null)
+                {
                     equals = false;
                     break;
                 }
@@ -171,27 +175,27 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
     /// <summary>Updates an event.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/events/update"/>
     /// </summary>
-    public Event Update(Event _event, Calendar calendar, string eventId)
+    public async Task<Event> UpdateAsync(Event _event, Calendar calendar, string eventId, CancellationToken cancellationToken = default)
     {
         EventsResource.UpdateRequest updateRequest = calendarService.Events.Update(_event, calendar.Id, eventId);
-        return updateRequest.Execute();
+        return await updateRequest.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Imports an event. This operation is used to add a private copy of an existing event to a calendar.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/events/import"/>
     /// </summary>
-    public Event Import(Event _event, Calendar calendar)
+    public async Task<Event> ImportAsync(Event _event, Calendar calendar, CancellationToken cancellationToken = default)
     {
         EventsResource.ImportRequest importRequest = calendarService.Events.Import(_event, calendar.Id);
-        return importRequest.Execute();
+        return await importRequest.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Deletes an event.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/events/delete"/>
     /// </summary>
-    public string Delete(Calendar calendar, Event _event)
+    public async Task<string> DeleteAsync(Calendar calendar, Event _event, CancellationToken cancellationToken = default)
     {
         EventsResource.DeleteRequest deleteRequest = calendarService.Events.Delete(calendar.Id, _event.Id);
-        return deleteRequest.Execute();
+        return await deleteRequest.ExecuteAsync(cancellationToken);
     }
 }

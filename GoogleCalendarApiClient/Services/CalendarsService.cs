@@ -2,24 +2,25 @@
 using Google.Apis.Calendar.v3.Data;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using static Google.Apis.Calendar.v3.CalendarsResource;
 
 namespace GoogleCalendarApiClient.Services;
 
 public class CalendarsService(CalendarService calendarService, ILogger<CalendarsService> logger)
 {
-
     /// <summary>Returns metadata for a calendar.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/get"/>
     /// </summary>
-    public Calendar? Get(string calendarId)
+    public async Task<Calendar?> GetAsync(string calendarId, CancellationToken cancellationToken = default)
     {
         Calendar? calendar = null;
 
         try
         {
             GetRequest getRequest = calendarService.Calendars.Get(calendarId);
-            calendar = getRequest.Execute();
+            calendar = await getRequest.ExecuteAsync(cancellationToken);
         }
         catch (Exception exception)
         {
@@ -32,26 +33,26 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// <summary>Creates a secondary calendar.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/insert"/>
     /// </summary>
-    public Calendar Insert(Calendar calendar)
+    public async Task<Calendar> InsertAsync(Calendar calendar, CancellationToken cancellationToken = default)
     {
         InsertRequest insertRequest = calendarService.Calendars.Insert(calendar);
-        Calendar newCalendar = insertRequest.Execute();
+        Calendar newCalendar = await insertRequest.ExecuteAsync(cancellationToken);
 
         return newCalendar;
     }
 
-    public Calendar InsertOrUpdate(Calendar calendar, string calendarId)
+    public async Task<Calendar> InsertOrUpdateAsync(Calendar calendar, string calendarId, CancellationToken cancellationToken = default)
     {
         Calendar _calendar;
-        Calendar? exists = Get(calendar.Id);
+        Calendar? exists = await GetAsync(calendar.Id, cancellationToken);
 
         if (exists == null)
         {
-            _calendar = Insert(calendar);
+            _calendar = await InsertAsync(calendar, cancellationToken);
         }
         else
         {
-            _calendar = Update(calendar, calendarId);
+            _calendar = await UpdateAsync(calendar, calendarId, cancellationToken);
         }
 
         return _calendar;
@@ -60,10 +61,10 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// <summary>Updates metadata for a calendar.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/update"/>
     /// </summary>
-    public Calendar Update(Calendar calendar, string calendarId)
+    public async Task<Calendar> UpdateAsync(Calendar calendar, string calendarId, CancellationToken cancellationToken = default)
     {
         UpdateRequest updateRequest = calendarService.Calendars.Update(calendar, calendarId);
-        Calendar updatedCalendar = updateRequest.Execute();
+        Calendar updatedCalendar = await updateRequest.ExecuteAsync(cancellationToken);
 
         return updatedCalendar;
     }
@@ -71,10 +72,10 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// <summary>Updates metadata for a calendar. This method supports patch semantics.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/patch"/>
     /// </summary>
-    public Calendar Patch(Calendar calendar, string calendarId)
+    public async Task<Calendar> PatchAsync(Calendar calendar, string calendarId, CancellationToken cancellationToken = default)
     {
         PatchRequest patchRequest = calendarService.Calendars.Patch(calendar, calendarId);
-        Calendar patchedCalendar = patchRequest.Execute();
+        Calendar patchedCalendar = await patchRequest.ExecuteAsync(cancellationToken);
 
         return patchedCalendar;
     }
@@ -82,10 +83,10 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// <summary>Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account. 
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/clear"/>
     /// </summary>
-    public string Clear(string calendarId)
+    public async Task<string> ClearAsync(string calendarId, CancellationToken cancellationToken = default)
     {
         ClearRequest clearRequest = calendarService.Calendars.Clear(calendarId);
-        string cleared = clearRequest.Execute();
+        string cleared = await clearRequest.ExecuteAsync(cancellationToken);
 
         return cleared;
     }
@@ -93,10 +94,10 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// <summary>Deletes a secondary calendar. Use CalendarsService.Clear for clearing all events on primary calendars.
     /// <see href="https://developers.google.com/calendar/api/v3/reference/calendars/delete"/>
     /// </summary>
-    public string Delete(string calendarId)
+    public async Task<string> DeleteAsync(string calendarId, CancellationToken cancellationToken = default)
     {
         DeleteRequest deleteRequest = calendarService.Calendars.Delete(calendarId);
-        string deleted = deleteRequest.Execute();
+        string deleted = await deleteRequest.ExecuteAsync(cancellationToken);
 
         return deleted;
     }

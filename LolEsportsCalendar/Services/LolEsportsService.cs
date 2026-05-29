@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -108,7 +107,7 @@ public class LolEsportsService(
                     Event googleEvent = GoogleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
 
                     // Insert or Update GoogleEvent
-                    eventsService.InsertOrUpdate(googleEvent, calendar, googleEvent.Id); // TODO
+                    await eventsService.InsertOrUpdateAsync(googleEvent, calendar, googleEvent.Id, cancellationToken); // TODO
                 }
 
                 page = data?.Schedule.Pages?.Newer;
@@ -147,7 +146,7 @@ public class LolEsportsService(
         string? calendarId = null;
 
         // Get calendars
-        var calendars = googleCalendarService.GetCalendarLookup();
+        var calendars = await googleCalendarService.GetCalendarLookupAsync(cancellationToken);
 
         // Get league
         League? league = await lolEsportsClient.GetLeagueByName(leagueName, cancellationToken);
@@ -165,10 +164,10 @@ public class LolEsportsService(
                 calendarId = c.Value;
             }
             else
-            if (c.Key == league.Slug)
-            {
-                calendarId = c.Value;
-            }
+                if (c.Key == league.Slug)
+                {
+                    calendarId = c.Value;
+                }
         }
 
         if (calendarId == null)
@@ -176,13 +175,13 @@ public class LolEsportsService(
             // Creat new calendar
             logger.LogInformation("Creating new calendar {LeagueName}", league.Name);
             Calendar newCalendar = ConvertLeagueToCalendar(league);
-            Calendar calendar = calendarsService.Insert(newCalendar);
+            Calendar calendar = await calendarsService.InsertAsync(newCalendar, cancellationToken);
             lolEsportsClient.ClearLeaguesCache();
 
             return calendar;
         }
 
-        return calendarsService.Get(calendarId);
+        return await calendarsService.GetAsync(calendarId, cancellationToken);
     }
 
     public static Calendar ConvertLeagueToCalendar(League league)
