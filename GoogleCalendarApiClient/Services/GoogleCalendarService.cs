@@ -22,39 +22,6 @@ public class GoogleCalendarService
         _calendarListService = calendarListService;
     }
 
-    private async Task<Dictionary<string, string>> BuildCalendarLookupAsync(CancellationToken cancellationToken = default)
-    {
-        // View
-        Dictionary<string, string> calendarLookup = [];
-        List<CalendarListEntry> calendarList = await GetAllCalendarsAsync(cancellationToken);
-
-        // Add calendars to lookup
-        foreach (var calendar in calendarList)
-        {
-            if (!calendarLookup.ContainsKey(calendar.Summary))
-            {
-                calendarLookup.Add(calendar.Summary, calendar.Id);
-            }
-        }
-
-        return calendarLookup;
-    }
-
-    private async Task<List<CalendarListEntry>> GetAllCalendarsAsync(CancellationToken cancellationToken = default)
-    {
-        List<CalendarListEntry> calendars = [];
-        CalendarList calendarList = await _calendarListService.ListAsync(cancellationToken);
-        calendars.AddRange(calendarList.Items);
-
-        while (calendarList.NextPageToken != null)
-        {
-            calendarList = await _calendarListService.ListAsync(calendarList.NextPageToken, cancellationToken);
-            calendars.AddRange(calendarList.Items);
-        }
-
-        return calendars;
-    }
-
     public async Task<Dictionary<string, string>> GetCalendarLookupAsync(CancellationToken cancellationToken = default)
     {
         return _calendarLookup ??= await BuildCalendarLookupAsync(cancellationToken);
@@ -108,5 +75,38 @@ public class GoogleCalendarService
         };
 
         return @event;
+    }
+
+    private async Task<Dictionary<string, string>> BuildCalendarLookupAsync(CancellationToken cancellationToken = default)
+    {
+        // View
+        Dictionary<string, string> calendarLookup = [];
+        List<CalendarListEntry> calendarList = await GetAllCalendarsAsync(cancellationToken);
+
+        // Add calendars to lookup
+        foreach (var calendar in calendarList)
+        {
+            if (!calendarLookup.ContainsKey(calendar.Summary))
+            {
+                calendarLookup.Add(calendar.Summary, calendar.Id);
+            }
+        }
+
+        return calendarLookup;
+    }
+
+    private async Task<List<CalendarListEntry>> GetAllCalendarsAsync(CancellationToken cancellationToken = default)
+    {
+        List<CalendarListEntry> calendars = [];
+        CalendarList calendarList = await _calendarListService.ListAsync(cancellationToken);
+        calendars.AddRange(calendarList.Items);
+
+        while (calendarList.NextPageToken != null)
+        {
+            calendarList = await _calendarListService.ListAsync(calendarList.NextPageToken, cancellationToken);
+            calendars.AddRange(calendarList.Items);
+        }
+
+        return calendars;
     }
 }

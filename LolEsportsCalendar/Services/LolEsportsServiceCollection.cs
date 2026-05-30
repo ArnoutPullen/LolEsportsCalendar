@@ -8,16 +8,18 @@ namespace LolEsportsCalendar.Services;
 
 public static class LolEsportsServiceCollection
 {
-	public static IServiceCollection AddLeagueEsportService(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.AddSingleton<LolEsportsService>();
-		services.AddHttpClient<LolEsportsClient>((serviceProvider, httpClient) => {
-			LolEsportsOptions? lolEsportOptions = configuration.Get<LolEsportsOptions>() ?? throw new InvalidOperationException("LolEsportsOptions is required");
+    public static IServiceCollection AddLeagueEsportService(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSingleton<LolEsportsService>();
+
+        services.AddHttpClient<LolEsportsClient>((serviceProvider, httpClient) =>
+        {
+            LolEsportsOptions? lolEsportOptions = configuration.Get<LolEsportsOptions>() ?? throw new InvalidOperationException("LolEsportsOptions is required");
 
             httpClient.BaseAddress = new Uri(lolEsportOptions.BaseUrl);
-			httpClient.DefaultRequestHeaders.Add("x-api-key", lolEsportOptions.ApiKey);
-		});
+            httpClient.DefaultRequestHeaders.Add("x-api-key", lolEsportOptions.ApiKey);
+        });
 
-		return services;
-	}
+        return services;
+    }
 }

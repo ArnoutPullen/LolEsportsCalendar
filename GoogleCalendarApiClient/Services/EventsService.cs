@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using static Google.Apis.Calendar.v3.EventsResource;
 
 namespace GoogleCalendarApiClient.Services;
 
@@ -16,8 +17,8 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
     /// </summary>
     public async Task<Events> ListAsync(string calendarId, CancellationToken cancellationToken = default)
     {
-        EventsResource.ListRequest listRequest = calendarService.Events.List(calendarId);
-        return await listRequest.ExecuteAsync(cancellationToken);
+        ListRequest request = calendarService.Events.List(calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Returns an event.
@@ -29,8 +30,8 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
 
         try
         {
-            EventsResource.GetRequest getRequest = calendarService.Events.Get(calendarId, eventId);
-            _event = await getRequest.ExecuteAsync(cancellationToken);
+            GetRequest request = calendarService.Events.Get(calendarId, eventId);
+            _event = await request.ExecuteAsync(cancellationToken);
         }
         catch (GoogleApiException exception)
         {
@@ -56,8 +57,8 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
     /// </summary>
     public async Task<Event> InsertAsync(Event _event, Calendar calendar, CancellationToken cancellationToken = default)
     {
-        EventsResource.InsertRequest insertRequest = calendarService.Events.Insert(_event, calendar.Id);
-        return await insertRequest.ExecuteAsync(cancellationToken);
+        InsertRequest request = calendarService.Events.Insert(_event, calendar.Id);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     public async Task<Event> InsertOrUpdateAsync(Event _event, Calendar calendar, string eventId, CancellationToken cancellationToken = default)
@@ -85,7 +86,34 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
         return existing;
     }
 
-    public bool Compare(object expectedObject, object actualObject)
+    /// <summary>Updates an event.
+    /// <see href="https://developers.google.com/calendar/api/v3/reference/events/update"/>
+    /// </summary>
+    public async Task<Event> UpdateAsync(Event _event, Calendar calendar, string eventId, CancellationToken cancellationToken = default)
+    {
+        UpdateRequest request = calendarService.Events.Update(_event, calendar.Id, eventId);
+        return await request.ExecuteAsync(cancellationToken);
+    }
+
+    /// <summary>Imports an event. This operation is used to add a private copy of an existing event to a calendar.
+    /// <see href="https://developers.google.com/calendar/api/v3/reference/events/import"/>
+    /// </summary>
+    public async Task<Event> ImportAsync(Event _event, Calendar calendar, CancellationToken cancellationToken = default)
+    {
+        ImportRequest request = calendarService.Events.Import(_event, calendar.Id);
+        return await request.ExecuteAsync(cancellationToken);
+    }
+
+    /// <summary>Deletes an event.
+    /// <see href="https://developers.google.com/calendar/api/v3/reference/events/delete"/>
+    /// </summary>
+    public async Task<string> DeleteAsync(Calendar calendar, Event _event, CancellationToken cancellationToken = default)
+    {
+        DeleteRequest request = calendarService.Events.Delete(calendar.Id, _event.Id);
+        return await request.ExecuteAsync(cancellationToken);
+    }
+
+    private bool Compare(object expectedObject, object actualObject)
     {
         Type expectedObjectType = expectedObject.GetType();
         Type actualObjectType = actualObject.GetType();
@@ -170,32 +198,5 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
         }
 
         return equals;
-    }
-
-    /// <summary>Updates an event.
-    /// <see href="https://developers.google.com/calendar/api/v3/reference/events/update"/>
-    /// </summary>
-    public async Task<Event> UpdateAsync(Event _event, Calendar calendar, string eventId, CancellationToken cancellationToken = default)
-    {
-        EventsResource.UpdateRequest updateRequest = calendarService.Events.Update(_event, calendar.Id, eventId);
-        return await updateRequest.ExecuteAsync(cancellationToken);
-    }
-
-    /// <summary>Imports an event. This operation is used to add a private copy of an existing event to a calendar.
-    /// <see href="https://developers.google.com/calendar/api/v3/reference/events/import"/>
-    /// </summary>
-    public async Task<Event> ImportAsync(Event _event, Calendar calendar, CancellationToken cancellationToken = default)
-    {
-        EventsResource.ImportRequest importRequest = calendarService.Events.Import(_event, calendar.Id);
-        return await importRequest.ExecuteAsync(cancellationToken);
-    }
-
-    /// <summary>Deletes an event.
-    /// <see href="https://developers.google.com/calendar/api/v3/reference/events/delete"/>
-    /// </summary>
-    public async Task<string> DeleteAsync(Calendar calendar, Event _event, CancellationToken cancellationToken = default)
-    {
-        EventsResource.DeleteRequest deleteRequest = calendarService.Events.Delete(calendar.Id, _event.Id);
-        return await deleteRequest.ExecuteAsync(cancellationToken);
     }
 }

@@ -19,8 +19,8 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
 
         try
         {
-            GetRequest getRequest = calendarService.Calendars.Get(calendarId);
-            calendar = await getRequest.ExecuteAsync(cancellationToken);
+            GetRequest request = calendarService.Calendars.Get(calendarId);
+            calendar = await request.ExecuteAsync(cancellationToken);
         }
         catch (Exception exception)
         {
@@ -35,10 +35,8 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// </summary>
     public async Task<Calendar> InsertAsync(Calendar calendar, CancellationToken cancellationToken = default)
     {
-        InsertRequest insertRequest = calendarService.Calendars.Insert(calendar);
-        Calendar newCalendar = await insertRequest.ExecuteAsync(cancellationToken);
-
-        return newCalendar;
+        InsertRequest request = calendarService.Calendars.Insert(calendar);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     public async Task<Calendar> InsertOrUpdateAsync(Calendar calendar, string calendarId, CancellationToken cancellationToken = default)
@@ -63,10 +61,8 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// </summary>
     public async Task<Calendar> UpdateAsync(Calendar calendar, string calendarId, CancellationToken cancellationToken = default)
     {
-        UpdateRequest updateRequest = calendarService.Calendars.Update(calendar, calendarId);
-        Calendar updatedCalendar = await updateRequest.ExecuteAsync(cancellationToken);
-
-        return updatedCalendar;
+        UpdateRequest request = calendarService.Calendars.Update(calendar, calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Updates metadata for a calendar. This method supports patch semantics.
@@ -74,10 +70,8 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// </summary>
     public async Task<Calendar> PatchAsync(Calendar calendar, string calendarId, CancellationToken cancellationToken = default)
     {
-        PatchRequest patchRequest = calendarService.Calendars.Patch(calendar, calendarId);
-        Calendar patchedCalendar = await patchRequest.ExecuteAsync(cancellationToken);
-
-        return patchedCalendar;
+        PatchRequest request = calendarService.Calendars.Patch(calendar, calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account. 
@@ -85,10 +79,8 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// </summary>
     public async Task<string> ClearAsync(string calendarId, CancellationToken cancellationToken = default)
     {
-        ClearRequest clearRequest = calendarService.Calendars.Clear(calendarId);
-        string cleared = await clearRequest.ExecuteAsync(cancellationToken);
-
-        return cleared;
+        ClearRequest request = calendarService.Calendars.Clear(calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Deletes a secondary calendar. Use CalendarsService.Clear for clearing all events on primary calendars.
@@ -96,9 +88,7 @@ public class CalendarsService(CalendarService calendarService, ILogger<Calendars
     /// </summary>
     public async Task<string> DeleteAsync(string calendarId, CancellationToken cancellationToken = default)
     {
-        DeleteRequest deleteRequest = calendarService.Calendars.Delete(calendarId);
-        string deleted = await deleteRequest.ExecuteAsync(cancellationToken);
-
-        return deleted;
+        DeleteRequest request = calendarService.Calendars.Delete(calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 }

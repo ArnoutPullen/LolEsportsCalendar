@@ -15,18 +15,15 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// </summary>
     public async Task<CalendarList> ListAsync(CancellationToken cancellationToken = default)
     {
-        ListRequest listRequest = calendarService.CalendarList.List();
-        CalendarList calendarList = await listRequest.ExecuteAsync(cancellationToken);
-
-        return calendarList;
+        ListRequest request = calendarService.CalendarList.List();
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     public async Task<CalendarList> ListAsync(string nextPageToken, CancellationToken cancellationToken = default)
     {
-        ListRequest listRequest = calendarService.CalendarList.List();
-        listRequest.PageToken = nextPageToken;
-        CalendarList calendarList = await listRequest.ExecuteAsync(cancellationToken);
-        return calendarList;
+        ListRequest request = calendarService.CalendarList.List();
+        request.PageToken = nextPageToken;
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Returns a calendar from the user's calendar list.
@@ -38,8 +35,8 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
 
         try
         {
-            GetRequest getRequest = calendarService.CalendarList.Get(calendarId);
-            calendarListEntry = await getRequest.ExecuteAsync(cancellationToken);
+            GetRequest request = calendarService.CalendarList.Get(calendarId);
+            calendarListEntry = await request.ExecuteAsync(cancellationToken);
         }
         catch (Exception exception)
         {
@@ -54,10 +51,8 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// </summary>
     public async Task<Channel> Watch(Channel body, CancellationToken cancellationToken = default)
     {
-        WatchRequest watchRequest = calendarService.CalendarList.Watch(body);
-        Channel channel = await watchRequest.ExecuteAsync(cancellationToken);
-
-        return channel;
+        WatchRequest request = calendarService.CalendarList.Watch(body);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Inserts an existing calendar into the user's calendar list.
@@ -65,10 +60,8 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// </summary>
     public async Task<CalendarListEntry> InsertAsync(CalendarListEntry calendar, CancellationToken cancellationToken = default)
     {
-        InsertRequest insertRequest = calendarService.CalendarList.Insert(calendar);
-        var calendarListEntry = await insertRequest.ExecuteAsync(cancellationToken);
-
-        return calendarListEntry;
+        InsertRequest request = calendarService.CalendarList.Insert(calendar);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     public async Task<CalendarListEntry> InsertOrUpdate(CalendarListEntry calendar, string calendarId, CancellationToken cancellationToken = default)
@@ -93,10 +86,8 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// </summary>
     public async Task<CalendarListEntry> UpdateAsync(CalendarListEntry calendar, string calendarId, CancellationToken cancellationToken = default)
     {
-        UpdateRequest updateRequest = calendarService.CalendarList.Update(calendar, calendarId);
-        CalendarListEntry calendarListEntry = await updateRequest.ExecuteAsync(cancellationToken);
-
-        return calendarListEntry;
+        UpdateRequest request = calendarService.CalendarList.Update(calendar, calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Updates an existing calendar on the user's calendar list. This method supports patch semantics.
@@ -104,10 +95,8 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// </summary>
     public async Task<CalendarListEntry> PatchAsync(CalendarListEntry calendar, string calendarId, CancellationToken cancellationToken = default)
     {
-        PatchRequest patchRequest = calendarService.CalendarList.Patch(calendar, calendarId);
-        CalendarListEntry calendarListEntry = await patchRequest.ExecuteAsync(cancellationToken);
-
-        return calendarListEntry;
+        PatchRequest request = calendarService.CalendarList.Patch(calendar, calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 
     /// <summary>Removes a calendar from the user's calendar list.
@@ -115,9 +104,7 @@ public class CalendarListService(CalendarService calendarService, ILogger<Calend
     /// </summary>
     public async Task<string> DeleteAsync(string calendarId, CancellationToken cancellationToken = default)
     {
-        DeleteRequest deleteRequest = calendarService.CalendarList.Delete(calendarId);
-        string deleted = await deleteRequest.ExecuteAsync(cancellationToken);
-
-        return deleted;
+        DeleteRequest request = calendarService.CalendarList.Delete(calendarId);
+        return await request.ExecuteAsync(cancellationToken);
     }
 }

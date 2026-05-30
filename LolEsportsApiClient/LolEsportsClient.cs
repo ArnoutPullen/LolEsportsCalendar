@@ -1,7 +1,9 @@
 ﻿using LolEsportsApiClient.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -14,9 +16,9 @@ public class LolEsportsClient(HttpClient httpClient)
 
     public async Task<List<League>> GetLeaguesAsync(CancellationToken cancellationToken = default)
     {
-        var leaguesResponseData = await GetDataAsync<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString(), cancellationToken);
+        var response = await GetDataAsync<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString(), cancellationToken);
 
-        return leaguesResponseData?.Leagues ?? [];
+        return response?.Leagues ?? [];
     }
 
     public async Task<League?> GetLeagueByName(string leagueName, CancellationToken cancellationToken = default)
@@ -35,16 +37,11 @@ public class LolEsportsClient(HttpClient httpClient)
         return null;
     }
 
-    public void ClearLeaguesCache()
-    {
-        _leagues = null;
-    }
-
     public async Task<List<EsportEvent>> GetScheduleAsync(CancellationToken cancellationToken = default)
     {
-        var leaguesResponseData = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(), cancellationToken);
+        var response = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(), cancellationToken);
 
-        return leaguesResponseData?.Schedule.Events ?? [];
+        return response?.Schedule.Events ?? [];
     }
 
     public async Task<LolEsportsScheduleResponseData?> GetScheduleByLeagueAsync(League league, string? page, CancellationToken cancellationToken = default)
@@ -62,17 +59,20 @@ public class LolEsportsClient(HttpClient httpClient)
         return await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query), cancellationToken);
     }
 
-    private async Task<T?> GetDataAsync<T>(string path, CancellationToken cancellationToken = default)
+    public void ClearLeaguesCache()
+    {
+        _leagues = null;
+    }
+
+    private async Task<T?> GetDataAsync<T>(string path, CancellationToken cancellationToken = default) where T : class
     {
         var response = await httpClient.GetAsync(path, cancellationToken);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new HttpRequestException("Response not ok");
-        }
+        response.EnsureSuccessStatusCode();
 
-        LolEsportsResponse<T> data = await response.Content.ReadAsAsync<LolEsportsResponse<T>>(cancellationToken);
-        return data.Data;
+        var result = await response.Content.ReadFromJsonAsync<LolEsportsResponse<T>>(cancellationToken);
+
+        return result?.Data ?? throw new InvalidOperationException("Response data was null");
     }
 
     private static string DictionaryToQueryString(Dictionary<string, string>? query = null)
