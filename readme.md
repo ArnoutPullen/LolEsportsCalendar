@@ -6,17 +6,25 @@ Click one of the links below to integrate the calendar in your own.
 - [MSI](https://calendar.google.com/calendar/u/0?cid=bXV2Y2NxNzA1ZTljdnFocnBtYjB1NHU4c2NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [First Stand](https://calendar.google.com/calendar/u/0?cid=OTBmYjMwY2I5MzJkOGUwNzUzYjAyODRlOWRlMjE0ODE2N2RlNzVjNjMxNGQzNzhmNDZlYTA5Yzk3MTgzMzQyZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [TFT Esports](https://calendar.google.com/calendar/u/0?cid=MmRjYTA2M2I0ZGQ5NDI5Mjc4ZDZjNTg0MTY3M2ZhYTUzMWUzZTNlYTdmMTZhOTExMjQzOTIxYTc1NDU3YzRiNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [All-Star Event](https://calendar.google.com/calendar/u/0?cid=b2VnaTNiNm1tcGN1M2hjaGltbXExc2VlaW9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [Worlds Qualifying Series](https://calendar.google.com/calendar/u/0?cid=OGM0MTAyYzY3MGNlNTRhNjE1ZGJmOGIwZjM5NGEzZjhmNmFhOTlkMmQ4NGU3NGEwMTAzNjIwOWUwNzEwZjZiNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 
 ## America
 - [LLA](https://calendar.google.com/calendar/u/0?cid=MDBlOTllZWJmYTcxMzIwMDZlM2Y1MDJiY2E3NmZmNDU5OTU5NmU0NmRjZTAwM2Q3M2JlMjIwYmU3MzE4YTA4OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [LTA Cross-Conference](https://calendar.google.com/calendar/u/0?cid=ZWYyNzJiNWRmZjk4ZWY2MjYxYTE5MDg5M2VjZjNhNjQzMWY4ZDQ5N2Y1ZDgxZThkYmE3OTQ1OGFkNDk5NTY2N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [Americas Challengers](https://calendar.google.com/calendar/u/0?cid=NzUxMGY4NWYxMDM4OTZkODM0NTUxNjRhZmIzZDc4NTA2NmJlNzUyNzJmMTA5Zjk1ZGUzYTBkNjE1NzE2ZWJlOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [Americas Cup](https://calendar.google.com/calendar/u/0?cid=OGMzNDk0Y2U3NWIyMzhlMDYzNzUyMzBlOTFjODk3ODc2MmRhMTZlYzA4Y2JiZGExYzZmNDg4ZjFiYWY5NDg0NkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [Honor Division](https://calendar.google.com/calendar/u/0?cid=ZmkxZnJ1anBwb2lnOHNnaHJsazQ0am5oNHNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [King's Duel](https://calendar.google.com/calendar/u/0?cid=MTBjYjA0MjViMjhhMjMyOGU5ZTY1YmFhZTkwMDUxNTkwYTEwY2JiOWQzYTE3ZjI3ZThhMjU3MGJmZDhmN2YxZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [Movistar Fiber Golden League](https://calendar.google.com/calendar/u/0?cid=djRvMTY2dGxoMjBydWo2dm9sc3JyZGk2N2dAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 ### North America
 - [LCS](https://calendar.google.com/calendar/u/0?cid=M2g4ZXBiaGtrZms2OGJqajE2ZjNhOHVyZjhAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [NACL](https://calendar.google.com/calendar/u/0?cid=MzFkMTE5YTU1MDVlYjg1NzI2OGE2MTE5MmFhMGRmNTVhYjNmMTAzN2VjYmFlNDJkYWMzYzlkODViYzBmYmU5Y0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [LTA North](https://calendar.google.com/calendar/u/0?cid=N2I5YzAyMTgwYzljN2NkZGYyOGIzZjFmYTliZmY4OTg0NWU0Mzg0ODcxODcwM2Q3MzdhZTg4YmY4OTg3YjRlNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [North Regional League](https://calendar.google.com/calendar/u/0?cid=NWVjZDQ5MzY3ZWEyMTNlY2RhYTE1YzE0M2IzNzA2ZWVlYmRiODMwMDZjYzRmY2ZmNDhhZTdhNTQ3MTAwYTE2Y0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [LRN](https://calendar.google.com/calendar/u/0?cid=NDU5ZTkzODVmODczM2I4YjQ5YWVlNjI0YzZmNzM3YmZmOTJiYjg2M2YwMjhmZjcxYzcyZTk0YjI0YWEwZDRiN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [LRS](https://calendar.google.com/calendar/u/0?cid=NmZiNDFkNGM0ZGViNDFjNzNiYzgxZjY4M2JjYzk0MTY5NDg5NzkyM2YxMjU1MTVlY2NlYzEzMjYwOWJlZGZiNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 
 ### South America
 - [CBLOL](https://calendar.google.com/calendar/u/0?cid=NGl2azczcWs4MzdubWNuN3ZnaTZsMXZncG9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
@@ -33,6 +41,8 @@ Click one of the links below to integrate the calendar in your own.
 - [LCP](https://calendar.google.com/calendar/u/0?cid=NmU3OTc5NjM0Njk3NTZlZjUxYTljMDAyMjc1MGE1MDlkOTIxODRjODBlNTUxMDMyMTI2OTFlMDlhYTVmOTZiOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [LCO](https://calendar.google.com/calendar/u/0?cid=NjEwM2I4YzZjNzIzZWM0Y2I1YWZlZjFhNzJkYjUwOGI2YWQzYmJiOGMyNjVjNjZjZTBlYjM2NjI3NTk5OTkzMEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [LCK Challengers](https://calendar.google.com/calendar/u/0?cid=NTUwNGQwM2FhMDEyNGMzOTg4MDFhOWM3OGJhNmMwOTY4MDlhNzNkMzQ1MDIwYTc5OWZjMGQyNWUyZGYzN2M3OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [LCL](https://calendar.google.com/calendar/u/0?cid=MDExZDMyMjk0MmUxNDlmNjE3NDhlMDMyYzA2MzUzMzBmZGE3ZWRiNTcyOGRlZjUxYmZiOGIzMTMwOTk5ZmQ2M0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [TAL](https://calendar.google.com/calendar/u/0?cid=b2FpYXB0OWxzZGQ3bGxyb3RhZTc3bWdyMnNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 ## EMEA (Europe / Middle East / Africa)
 - [LEC](https://calendar.google.com/calendar/u/0?cid=aXAwMmdmOTk1MGxhaGxrcTM3MzhtanI2ZGtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
@@ -50,6 +60,12 @@ Click one of the links below to integrate the calendar in your own.
 - [SuperLiga](https://calendar.google.com/calendar/u/0?cid=ZTBiN2Y5MjY3ZjNiYzUwMTljZmQ3ODM4Mjg1MzBhZTEwMjhhNmJiMmRjYjNjYWQ2Y2QyMTEwM2MwODliZWViMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [Prime League](https://calendar.google.com/calendar/u/0?cid=NzYzMzE1YmQ1YTQ5YTIzYjlhYzU5MDBlZGQ0MWQ4YzY4YzVjOGYxNjcwNjMwMTgyZWZkMDIxZGQyZjI4NzQyYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [Arabian League](https://calendar.google.com/calendar/u/0?cid=YjgxYTNkODk0ZmY3ODI1OTA5NmE3NzA2YjUyY2MyYzU1ODY2Zjc3NWRjOWExMDAxOTQzMThkNjYwMTExNWE0OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [Baltic Masters](https://calendar.google.com/calendar/u/0?cid=NHBnNjdzam5vbDVwaDU1MjEzbzE2NGsxMWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [Elite Series](https://calendar.google.com/calendar/u/0?cid=Y2ZnMTI0YThpYnRoaTAwYThqNThocmY1M29AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [Greek Legends League](https://calendar.google.com/calendar/u/0?cid=MzA2aDNhaXZuNW9tdXM5NGFmZGxuYXR2N3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [LES](https://calendar.google.com/calendar/u/0?cid=YjkwMzgyMTAwYjViYjVlYTQ1ZmVmMmVlNWVmMDdkZjQ0MWNmOGY5N2JhOTU0YmJhNDg5ZjRjMzI5MGJjNTNiOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [PG Nationals](https://calendar.google.com/calendar/u/0?cid=ZDF0NGhyamZnZnA2YzJsbTk3OTZncmRnYXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [Ultraliga](https://calendar.google.com/calendar/u/0?cid=NDVoYjdzMms5bnRmdjRyamJqMmtnNzhoYW9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 
 # Support
 Let [me know](https://github.com/ArnoutPullen/LolEsportsCalendar/issues/new?title=Feature%20Request:%20New%20Calendar) if you would like to see more calendars.
