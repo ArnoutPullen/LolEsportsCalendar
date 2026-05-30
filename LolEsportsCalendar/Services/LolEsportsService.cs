@@ -149,13 +149,10 @@ public class LolEsportsService(
 
                                 foreach (var game in details.Event.Match.Games)
                                 {
+                                    if (game.State == "unstarted") continue;
                                     descriptionBuilder.Append($"<li><a href=\"https://lolesports.com/vod/{details.Event.Id}/{game.Number}/\">Game {game.Number}</a></li>");
                                 }
                                 descriptionBuilder.Append("</ul>");
-                            }
-                            else
-                            {
-                                // TODO: Add live urls
                             }
 
                             var name = $"{details.Event.League.Name} - {details.Event.Match.Teams.FirstOrDefault()?.Code} vs {details.Event.Match.Teams.LastOrDefault()?.Code}";
