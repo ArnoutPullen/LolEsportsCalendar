@@ -7,6 +7,9 @@ namespace LolEsportsApiClient.Models;
 [DebuggerDisplay("{Code,nq} - {Name,nq}")]
 public partial class Team
 {
+    [JsonProperty("id")]
+    public required string Id { get; set; }
+
     [JsonProperty("name")]
     public required string Name { get; set; }
 
@@ -21,4 +24,7 @@ public partial class Team
 
     [JsonProperty("record")]
     public Record? Record { get; set; }
+
+    [JsonProperty("side")]
+    public string? Side { get; set; }
 }

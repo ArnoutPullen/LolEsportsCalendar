@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -98,16 +100,140 @@ public class LolEsportsService(
 
                 foreach (EsportEvent esportEvent in data?.Schedule.Events ?? [])
                 {
-                    if (null == esportEvent.Match.Id)
+                    if (null == esportEvent.Match?.Id)
                     {
                         logger.LogError("Error esport event.match.id null");
                         continue;
                     }
+
                     // Convert LeagueEvent to GoogleEvent
-                    Event googleEvent = GoogleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
+                    Google.Apis.Calendar.v3.Data.Event googleEvent = GoogleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
+
+                    // Get events details
+                    if (esportEvent.Id != null)
+                    {
+                        var details = await lolEsportsClient.GetEventDetailsAsync(esportEvent.Id, cancellationToken);
+
+                        if (details != null)
+                        {
+                            foreach (var game in details.Event.Match.Games ?? [])
+                            {
+                                foreach (var vod in game.Vods)
+                                {
+                                    logger.LogInformation("Found vod for event {EventId}: {VodProvider} - {VodParameter}", esportEvent.Id, vod.Provider, vod.Parameter);
+                                }
+                            }
+                        }
+                    }
+
+                    if (esportEvent.Match.Id != null)
+                    {
+                        var details = await lolEsportsClient.GetEventDetailsAsync(esportEvent.Match.Id, cancellationToken);
+
+                        if (details != null)
+                        {
+                            List<(Game, Vod)> youtubeVods = [];
+                            List<(Game, Vod)> twitchVods = [];
+
+                            var descriptionBuilder = new StringBuilder();
+
+                            if (esportEvent.StartTime <= DateTime.UtcNow)
+                            {
+                                descriptionBuilder.Append("LolEsports:<ul>");
+
+                                foreach (var game in details.Event.Match.Games)
+                                {
+                                    descriptionBuilder.Append($"<li><a href=\"https://lolesports.com/vod/{details.Event.Id}/{game.Number}/\">Game {game.Number}</a></li>");
+                                }
+                                descriptionBuilder.Append("</ul>");
+                            }
+                            else
+                            {
+                                // TODO: Add live urls
+                            }
+
+                            var name = $"{details.Event.League.Name} - {details.Event.Match.Teams.FirstOrDefault()?.Code} vs {details.Event.Match.Teams.LastOrDefault()?.Code}";
+
+                            foreach (var game in details.Event.Match.Games ?? [])
+                            {
+                                var youtubeVod = game.Vods.FirstOrDefault(v => v.Provider == "youtube" && v.Locale == "en-US")
+                                    ?? game.Vods.FirstOrDefault(v => v.Provider == "youtube" && v.Locale == "en-GB")
+                                    ?? game.Vods.FirstOrDefault(v => v.Provider == "youtube");
+
+                                if (youtubeVod != null)
+                                {
+                                    youtubeVods.Add((game, youtubeVod));
+                                }
+
+                                var twitchVod = game.Vods.FirstOrDefault(v => v.Provider == "twitch" && v.Locale == "en-US")
+                                    ?? game.Vods.FirstOrDefault(v => v.Provider == "twitch" && v.Locale == "en-GB")
+                                    ?? game.Vods.FirstOrDefault(v => v.Provider == "twitch");
+
+                                if (twitchVod != null)
+                                {
+                                    twitchVods.Add((game, twitchVod));
+                                }
+                            }
+
+                            if (youtubeVods.Any())
+                            {
+                                descriptionBuilder.Append("Youtube:<ul>");
+                                foreach (var (game, video) in youtubeVods)
+                                {
+                                    if (video.StartMillis.HasValue)
+                                    {
+                                        var offsetSeconds = (int)TimeSpan.FromMilliseconds(video.StartMillis.Value).TotalSeconds;
+                                        descriptionBuilder.Append($"<li><a href=\"https://www.youtube.com/watch?v={video.Parameter}&t={offsetSeconds}s\">Game {game.Number}</a></li>");
+                                    }
+                                    else
+                                    {
+                                        descriptionBuilder.Append($"<li><a href=\"https://www.youtube.com/watch?v={video.Parameter}\">Game {game.Number}</a></li>");
+                                    }
+                                }
+                                descriptionBuilder.Append("</ul>");
+                            }
+
+                            if (twitchVods.Any())
+                            {
+                                descriptionBuilder.Append("Twitch:<ul>");
+                                foreach (var (game, video) in twitchVods)
+                                {
+                                    if (video.StartMillis.HasValue)
+                                    {
+                                        var timeSpan = TimeSpan.FromMilliseconds(video.StartMillis.Value);
+                                        var twitchTimestamp = "t=";
+                                        if (timeSpan.Hours > 0)
+                                        {
+                                            twitchTimestamp += $"{timeSpan.Hours}h";
+                                        }
+                                        if (timeSpan.Minutes > 0)
+                                        {
+                                            twitchTimestamp += $"{timeSpan.Minutes}m";
+                                        }
+                                        if (timeSpan.Seconds > 0)
+                                        {
+                                            twitchTimestamp += $"{timeSpan.Seconds}s";
+                                        }
+                                        descriptionBuilder.Append($"<li><a href=\"https://www.twitch.tv/videos/{video.Parameter}?{twitchTimestamp}\">Game {game.Number}</a></li>");
+                                    }
+                                    else
+                                    {
+                                        descriptionBuilder.Append($"<li><a href=\"https://www.twitch.tv/videos/{video.Parameter}\">Game {game.Number}</a></li>");
+                                    }
+                                }
+                                descriptionBuilder.Append("</ul>");
+                            }
+
+                            var description = descriptionBuilder.ToString();
+                            if (!string.IsNullOrEmpty(description))
+                            {
+                                googleEvent.Description += description;
+                            }
+                        }
+                    }
 
                     // Insert or Update GoogleEvent
-                    await eventsService.InsertOrUpdateAsync(googleEvent, calendar, googleEvent.Id, cancellationToken); // TODO
+                    await eventsService.InsertOrUpdateAsync(googleEvent, calendar, googleEvent.Id, cancellationToken);
                 }
 
                 page = data?.Schedule.Pages?.Newer;

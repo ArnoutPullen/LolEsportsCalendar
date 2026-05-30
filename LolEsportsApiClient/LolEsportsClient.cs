@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -59,6 +58,16 @@ public class LolEsportsClient(HttpClient httpClient)
         return await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query), cancellationToken);
     }
 
+    public async Task<EventDetailsResponse?> GetEventDetailsAsync(string eventId, CancellationToken cancellationToken = default)
+    {
+        Dictionary<string, string> query = new()
+        {
+            { "id", eventId }
+        };
+
+        return await GetDataAsync<EventDetailsResponse>("/persisted/gw/getEventDetails" + DictionaryToQueryString(query), cancellationToken);
+    }
+
     public void ClearLeaguesCache()
     {
         _leagues = null;
@@ -70,7 +79,7 @@ public class LolEsportsClient(HttpClient httpClient)
 
         response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<LolEsportsResponse<T>>(cancellationToken);
+        var result = await response.Content.ReadAsAsync<LolEsportsResponse<T>>(cancellationToken);
 
         return result?.Data ?? throw new InvalidOperationException("Response data was null");
     }

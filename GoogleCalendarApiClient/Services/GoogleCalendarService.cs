@@ -8,19 +8,12 @@ using System.Threading.Tasks;
 
 namespace GoogleCalendarApiClient.Services;
 
-public class GoogleCalendarService
+public class GoogleCalendarService(
+    CalendarsService calendarsService,
+    CalendarListService calendarListService,
+    ILogger<GoogleCalendarService> logger)
 {
     private Dictionary<string, string>? _calendarLookup = null;
-    private readonly CalendarsService _calendarsService;
-    private readonly CalendarListService _calendarListService;
-    private readonly ILogger<GoogleCalendarService> _logger;
-
-    public GoogleCalendarService(CalendarsService calendarsService, CalendarListService calendarListService, ILogger<GoogleCalendarService> logger)
-    {
-        _logger = logger;
-        _calendarsService = calendarsService;
-        _calendarListService = calendarListService;
-    }
 
     public async Task<Dictionary<string, string>> GetCalendarLookupAsync(CancellationToken cancellationToken = default)
     {
@@ -34,16 +27,16 @@ public class GoogleCalendarService
 
         try
         {
-            newCalendar = await _calendarsService.InsertAsync(calendar, cancellationToken);
+            newCalendar = await calendarsService.InsertAsync(calendar, cancellationToken);
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Error while creating calendar: {CalendarSummary}", calendar.Summary);
+            logger.LogError(exception, "Error while creating calendar: {CalendarSummary}", calendar.Summary);
         }
 
         if (newCalendar != null)
         {
-            _logger.LogInformation("Created calendar {CalendarSummary}", calendar.Summary);
+            logger.LogInformation("Created calendar {CalendarSummary}", calendar.Summary);
             _calendarLookup ??= await BuildCalendarLookupAsync(cancellationToken);
             _calendarLookup.Add(calendar.Summary, calendar.Id);
         }
@@ -62,11 +55,11 @@ public class GoogleCalendarService
         return calendar;
     }
 
-    public static Event ConvertEsportEventToGoogleEvent(EsportEvent esportEvent)
+    public static Google.Apis.Calendar.v3.Data.Event ConvertEsportEventToGoogleEvent(EsportEvent esportEvent)
     {
         if (esportEvent.Match == null) throw new MissingMemberException("EsportEvent is missing match property");
 
-        Event @event = new()
+        Google.Apis.Calendar.v3.Data.Event @event = new()
         {
             Id = esportEvent.Match.Id,
             Start = new EventDateTime { DateTimeDateTimeOffset = esportEvent.StartTime.UtcDateTime },
@@ -98,12 +91,12 @@ public class GoogleCalendarService
     private async Task<List<CalendarListEntry>> GetAllCalendarsAsync(CancellationToken cancellationToken = default)
     {
         List<CalendarListEntry> calendars = [];
-        CalendarList calendarList = await _calendarListService.ListAsync(cancellationToken);
+        CalendarList calendarList = await calendarListService.ListAsync(cancellationToken);
         calendars.AddRange(calendarList.Items);
 
         while (calendarList.NextPageToken != null)
         {
-            calendarList = await _calendarListService.ListAsync(calendarList.NextPageToken, cancellationToken);
+            calendarList = await calendarListService.ListAsync(calendarList.NextPageToken, cancellationToken);
             calendars.AddRange(calendarList.Items);
         }
 

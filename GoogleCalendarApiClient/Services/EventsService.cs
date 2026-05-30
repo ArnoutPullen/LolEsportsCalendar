@@ -72,7 +72,13 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
         }
 
         // Compare events, only update when data changed
-        bool equals = Compare(_event, existing);
+        bool equals = Compare(_event, existing, [
+            nameof(Event.Id),
+            nameof(Event.Start),
+            nameof(Event.End),
+            nameof(Event.Summary),
+            nameof(Event.Description)
+        ]);
 
         if (!equals)
         {
@@ -113,7 +119,7 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
         return await request.ExecuteAsync(cancellationToken);
     }
 
-    private bool Compare(object expectedObject, object actualObject)
+    private bool Compare(object expectedObject, object actualObject, string[] propertyNames)
     {
         Type expectedObjectType = expectedObject.GetType();
         Type actualObjectType = actualObject.GetType();
@@ -121,6 +127,11 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
 
         foreach (PropertyInfo expectedProperty in expectedObjectType.GetProperties())
         {
+            if (!propertyNames.Contains(expectedProperty.Name))
+            {
+                continue;
+            }
+
             object? expectedPropertyValue = expectedProperty.GetValue(expectedObject);
             object? actualPropertyValue = actualObjectType.GetProperty(expectedProperty.Name)?.GetValue(actualObject);
 
@@ -150,10 +161,11 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
                 continue;
             }
 
-            // Skip if expected value is null
-            if (expectedPropertyValue == null)
+            // One null, one not null => not equal
+            if (expectedPropertyValue == null || actualPropertyValue == null)
             {
-                continue;
+                equals = false;
+                break;
             }
 
             if (expectedPropertyValue is DateTime expectedDateTime)

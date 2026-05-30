@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LolEsportsApiClient.Models;
 
-public partial class Match
+public class Match
 {
     [JsonProperty("id")]
     public string? Id { get; set; }
@@ -16,4 +16,7 @@ public partial class Match
 
     [JsonProperty("strategy")]
     public Strategy? Strategy { get; set; }
+
+    [JsonProperty("games")]
+    public List<Game> Games { get; set; } = [];
 }

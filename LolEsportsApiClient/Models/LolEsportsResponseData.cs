@@ -14,3 +14,9 @@ public class LolEsportsScheduleResponseData
     [JsonProperty("schedule")]
     public required Schedule Schedule { get; set; }
 }
+
+public class EventDetailsResponse
+{
+    [JsonProperty("event")]
+    public required Event Event { get; set; }
+}
