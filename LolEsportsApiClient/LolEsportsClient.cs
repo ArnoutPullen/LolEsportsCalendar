@@ -15,7 +15,7 @@ public class LolEsportsClient(HttpClient httpClient)
 
     public async Task<List<League>> GetLeaguesAsync(CancellationToken cancellationToken = default)
     {
-        var response = await GetDataAsync<LolEsportsLeaguesResponseData>("/persisted/gw/getLeagues" + DictionaryToQueryString(), cancellationToken);
+        var response = await GetDataAsync<LeaguesResponse>("/persisted/gw/getLeagues" + DictionaryToQueryString(), cancellationToken);
 
         return response?.Leagues ?? [];
     }
@@ -38,12 +38,12 @@ public class LolEsportsClient(HttpClient httpClient)
 
     public async Task<List<EsportEvent>> GetScheduleAsync(CancellationToken cancellationToken = default)
     {
-        var response = await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(), cancellationToken);
+        var response = await GetDataAsync<ScheduleResponse>("/persisted/gw/getSchedule" + DictionaryToQueryString(), cancellationToken);
 
         return response?.Schedule.Events ?? [];
     }
 
-    public async Task<LolEsportsScheduleResponseData?> GetScheduleByLeagueAsync(League league, string? page, CancellationToken cancellationToken = default)
+    public async Task<ScheduleResponse?> GetScheduleByLeagueAsync(League league, string? page, CancellationToken cancellationToken = default)
     {
         Dictionary<string, string> query = new()
         {
@@ -55,7 +55,12 @@ public class LolEsportsClient(HttpClient httpClient)
             query.Add("pageToken", page);
         }
 
-        return await GetDataAsync<LolEsportsScheduleResponseData>("/persisted/gw/getSchedule" + DictionaryToQueryString(query), cancellationToken);
+        return await GetDataAsync<ScheduleResponse>("/persisted/gw/getSchedule" + DictionaryToQueryString(query), cancellationToken);
+    }
+
+    public async Task<LiveEventsResponse?> GetLiveEventsAsync(CancellationToken cancellationToken = default)
+    {
+        return await GetDataAsync<LiveEventsResponse>("/persisted/gw/getLive" + DictionaryToQueryString(), cancellationToken);
     }
 
     public async Task<EventDetailsResponse?> GetEventDetailsAsync(string eventId, CancellationToken cancellationToken = default)

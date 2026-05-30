@@ -10,6 +10,9 @@ public partial class Team
     [JsonProperty("id")]
     public required string Id { get; set; }
 
+    [JsonProperty("slug")]
+    public string? Slug { get; set; }
+
     [JsonProperty("name")]
     public required string Name { get; set; }
 

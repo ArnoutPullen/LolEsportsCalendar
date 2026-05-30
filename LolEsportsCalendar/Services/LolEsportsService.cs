@@ -91,14 +91,15 @@ public class LolEsportsService(
     {
         try
         {
-            LolEsportsScheduleResponseData? data = null;
+            ScheduleResponse? schedule = null;
+            var liveEvents = await lolEsportsClient.GetLiveEventsAsync(cancellationToken);
 
             do
             {
                 // Get scheduled events of league
-                data = await lolEsportsClient.GetScheduleByLeagueAsync(league, page, cancellationToken);
+                schedule = await lolEsportsClient.GetScheduleByLeagueAsync(league, page, cancellationToken);
 
-                foreach (EsportEvent esportEvent in data?.Schedule.Events ?? [])
+                foreach (EsportEvent esportEvent in schedule?.Schedule.Events ?? [])
                 {
                     if (null == esportEvent.Match?.Id)
                     {
@@ -109,33 +110,38 @@ public class LolEsportsService(
                     // Convert LeagueEvent to GoogleEvent
                     Google.Apis.Calendar.v3.Data.Event googleEvent = GoogleCalendarService.ConvertEsportEventToGoogleEvent(esportEvent);
 
-                    // Get events details
-                    if (esportEvent.Id != null)
-                    {
-                        var details = await lolEsportsClient.GetEventDetailsAsync(esportEvent.Id, cancellationToken);
-
-                        if (details != null)
-                        {
-                            foreach (var game in details.Event.Match.Games ?? [])
-                            {
-                                foreach (var vod in game.Vods)
-                                {
-                                    logger.LogInformation("Found vod for event {EventId}: {VodProvider} - {VodParameter}", esportEvent.Id, vod.Provider, vod.Parameter);
-                                }
-                            }
-                        }
-                    }
-
                     if (esportEvent.Match.Id != null)
                     {
                         var details = await lolEsportsClient.GetEventDetailsAsync(esportEvent.Match.Id, cancellationToken);
+                        var liveEvent = liveEvents?.Schedule.Events.FirstOrDefault(e => e.Id == esportEvent.Match.Id);
+                        var descriptionBuilder = new StringBuilder();
+
+                        if (liveEvent != null && liveEvent.Streams.Count != 0)
+                        {
+                            descriptionBuilder.Append("Live:<ul>");
+                            foreach (var stream in liveEvent.Streams)
+                            {
+                                logger.LogInformation("Found live stream for event {EventId}: {StreamProvider} - {StreamParameter}", esportEvent.Match.Id, stream.Provider, stream.Parameter);
+                                if (stream.Provider == "twitch")
+                                {
+                                    descriptionBuilder.Append($"<li><a href=\"https://www.twitch.tv/{stream.Parameter}\">Twitch ({stream.Parameter})</a></li>");
+                                }
+                                else if (stream.Provider == "youtube")
+                                {
+                                    descriptionBuilder.Append($"<li><a href=\"https://www.youtube.com/watch?v={stream.Parameter}\">Youtube ({stream.MediaLocale.EnglishName})</a></li>");
+                                }
+                                else
+                                {
+                                    logger.LogError("Unknown stream provider {StreamProvider} for event {EventId}", stream.Provider, esportEvent.Match.Id);
+                                }
+                            }
+                            descriptionBuilder.Append("</ul>");
+                        }
 
                         if (details != null)
                         {
                             List<(Game, Vod)> youtubeVods = [];
                             List<(Game, Vod)> twitchVods = [];
-
-                            var descriptionBuilder = new StringBuilder();
 
                             if (esportEvent.StartTime <= DateTime.UtcNow)
                             {
@@ -223,12 +229,12 @@ public class LolEsportsService(
                                 }
                                 descriptionBuilder.Append("</ul>");
                             }
+                        }
 
-                            var description = descriptionBuilder.ToString();
-                            if (!string.IsNullOrEmpty(description))
-                            {
-                                googleEvent.Description += description;
-                            }
+                        var description = descriptionBuilder.ToString();
+                        if (!string.IsNullOrEmpty(description))
+                        {
+                            googleEvent.Description += description;
                         }
                     }
 
@@ -236,8 +242,8 @@ public class LolEsportsService(
                     await eventsService.InsertOrUpdateAsync(googleEvent, calendar, googleEvent.Id, cancellationToken);
                 }
 
-                page = data?.Schedule.Pages?.Newer;
-            } while (data?.Schedule.Pages?.Newer != null);
+                page = schedule?.Schedule.Pages?.Newer;
+            } while (schedule?.Schedule.Pages?.Newer != null);
         }
         catch (GoogleApiException exception)
         {

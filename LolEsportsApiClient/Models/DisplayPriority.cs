@@ -8,6 +8,5 @@ public partial class DisplayPriority
     public long Position { get; set; }
 
     [JsonProperty("status")]
-    // public Status Status { get; set; }
     public string? Status { get; set; }
 }

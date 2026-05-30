@@ -8,6 +8,7 @@ namespace LolEsportsApiClient.Models;
 public partial class EsportEvent
 {
     [JsonProperty("id")]
+    [Obsolete("The 'id' property is deprecated and may be removed in future versions. Use 'match.id' instead.")]
     public string? Id { get; set; }
 
     [JsonProperty("startTime")]
