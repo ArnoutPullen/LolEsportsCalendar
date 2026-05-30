@@ -43,6 +43,8 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
             {
                 logger.LogError(exception, "Error while getting Event with id {EventId}", eventId);
             }
+
+            throw;
         }
         catch (Exception exception)
         {
