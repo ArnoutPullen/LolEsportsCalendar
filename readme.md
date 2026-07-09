@@ -8,6 +8,7 @@ Click one of the links below to integrate the calendar in your own.
 - [TFT Esports](https://calendar.google.com/calendar/u/0?cid=MmRjYTA2M2I0ZGQ5NDI5Mjc4ZDZjNTg0MTY3M2ZhYTUzMWUzZTNlYTdmMTZhOTExMjQzOTIxYTc1NDU3YzRiNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [All-Star Event](https://calendar.google.com/calendar/u/0?cid=b2VnaTNiNm1tcGN1M2hjaGltbXExc2VlaW9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [Worlds Qualifying Series](https://calendar.google.com/calendar/u/0?cid=OGM0MTAyYzY3MGNlNTRhNjE1ZGJmOGIwZjM5NGEzZjhmNmFhOTlkMmQ4NGU3NGEwMTAzNjIwOWUwNzEwZjZiNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [Esports World Cup](https://calendar.google.com/calendar/u/0?cid=Y2I1MmJmNjQ3ZDhhMWQ3OWVmOGE1YTQ5YWUyZjdlZTQ2ZmI3N2UyMzQ2ZTVmZmIzYzk0ZGQ1MzgxMTMwMzk0YUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 
 ## America
 - [LLA](https://calendar.google.com/calendar/u/0?cid=MDBlOTllZWJmYTcxMzIwMDZlM2Y1MDJiY2E3NmZmNDU5OTU5NmU0NmRjZTAwM2Q3M2JlMjIwYmU3MzE4YTA4OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
@@ -28,6 +29,7 @@ Click one of the links below to integrate the calendar in your own.
 
 ### South America
 - [CBLOL](https://calendar.google.com/calendar/u/0?cid=NGl2azczcWs4MzdubWNuN3ZnaTZsMXZncG9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+- [CBLOL Academy](https://calendar.google.com/calendar/u/0?cid=cHBpY2tucjU2MzY1NGlxZ2ZucnBscnFrbTBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [LTA South](https://calendar.google.com/calendar/u/0?cid=ODI4NTEwMGRkMmFlOThlODJkZjcxNTQ1MmRmMDMxNzliYjUwZjliNjkwN2RlNDE4NDNiNmZkNTlmODk1OTE2N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [South Regional League](https://calendar.google.com/calendar/u/0?cid=YjU4MmU0ZjVmYTY0NDViYjBiOWZlMDBjMmQyNzQyNGM5MzVjYTNjMGUyZWEzZGUwNTQwODY4MjI5NWIwYzFjY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [Circuito Desafiante](https://calendar.google.com/calendar/u/0?cid=ODc1MGE2MzQzODY2ZGMyNGQwYmY2MDhiNjI5YWYyNGZlMzdhMDM3NmZmZTQ2MWVlZTgyNzFjN2Y5ZTM5ZTUzMEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
@@ -36,6 +38,7 @@ Click one of the links below to integrate the calendar in your own.
 - [LCK](https://calendar.google.com/calendar/u/0?cid=aDRmbnA0aDJrZXR0aDRsaWpmbDYwbmZ0cmtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [LPL](https://calendar.google.com/calendar/u/0?cid=b2Rza3BidDhscnVhdnF0bzBlajJoNGNscWtAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [LJL](https://calendar.google.com/calendar/u/0?cid=NzczMzUwMjVmNzM1YzM2MmMwYWRkNGNiODE3NmQ2M2JkNmE1OTEwZjE1ZDFlZGFlYTIzZWJlODcxMzI3NGNkZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
+- [LJL Academy](https://calendar.google.com/calendar/u/0?cid=bXZjdmZsdXN1b2pjMmt0Mmh1NnQ2cXRzZDBAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [PCS](https://calendar.google.com/calendar/u/0?cid=MzQyZDFmNzQxODk4OTI1NjcyOTkzNTlhMGIzNGIyYjdjOGY1MzBhNjJlNTBmMDFmMzVhZGQzYTQ2MzBiNGQ1MUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [VCS](https://calendar.google.com/calendar/u/0?cid=ZDdiYWJlZTMwMGM4YTgwY2ViZTFjNmQyYzQyMDA0YWQ3ZjBjOWE1MmNlMjhjYTVhZmY3ZWY2Y2U2MDcxN2QwM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [LCP](https://calendar.google.com/calendar/u/0?cid=NmU3OTc5NjM0Njk3NTZlZjUxYTljMDAyMjc1MGE1MDlkOTIxODRjODBlNTUxMDMyMTI2OTFlMDlhYTVmOTZiOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
