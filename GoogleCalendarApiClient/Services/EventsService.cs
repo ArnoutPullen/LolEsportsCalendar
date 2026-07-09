@@ -42,9 +42,8 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
             else
             {
                 logger.LogError(exception, "Error while getting Event with id {EventId}", eventId);
+                throw;
             }
-
-            throw;
         }
         catch (Exception exception)
         {
@@ -65,33 +64,42 @@ public class EventsService(CalendarService calendarService, ILogger<EventsServic
 
     public async Task<Event> InsertOrUpdateAsync(Event _event, Calendar calendar, string eventId, CancellationToken cancellationToken = default)
     {
-        Event? existing = await GetAsync(calendar.Id, eventId, cancellationToken);
-
-        if (existing == null)
+        try
         {
-            logger.LogInformation("Inserting Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
-            return await InsertAsync(_event, calendar, cancellationToken);
-        }
+            Event? existing = await GetAsync(calendar.Id, eventId, cancellationToken);
 
-        // Compare events, only update when data changed
-        bool equals = Compare(_event, existing, [
-            nameof(Event.Id),
+            if (existing == null)
+            {
+                logger.LogInformation("Inserting Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
+                return await InsertAsync(_event, calendar, cancellationToken);
+            }
+
+            // Compare events, only update when data changed
+            bool equals = Compare(_event, existing, [
+                nameof(Event.Id),
             nameof(Event.Start),
             nameof(Event.End),
             nameof(Event.Summary),
             nameof(Event.Description)
-        ]);
+            ]);
 
-        if (!equals)
-        {
-            logger.LogInformation("Updating Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
-            return await UpdateAsync(_event, calendar, eventId, cancellationToken);
+            if (!equals)
+            {
+                logger.LogInformation("Updating Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
+                return await UpdateAsync(_event, calendar, eventId, cancellationToken);
+            }
+
+            // TODO: Show league name
+            logger.LogDebug("Event unchanged while trying to InsertOrUpdate Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
+
+            return existing;
+
         }
-
-        // TODO: Show league name
-        logger.LogDebug("Event unchanged while trying to InsertOrUpdate Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
-
-        return existing;
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error while trying to InsertOrUpdate Event {EventSummary} ({EventId}) in calendar {CalendarSummary}", _event.Summary, eventId, calendar.Summary);
+            throw;
+        }
     }
 
     /// <summary>Updates an event.

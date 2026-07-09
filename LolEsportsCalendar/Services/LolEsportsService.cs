@@ -121,7 +121,8 @@ public class LolEsportsService(
                             descriptionBuilder.Append("Live:<ul>");
                             foreach (var stream in liveEvent.Streams)
                             {
-                                logger.LogInformation("Found live stream for event {EventId}: {StreamProvider} - {StreamParameter}", esportEvent.Match.Id, stream.Provider, stream.Parameter);
+                                logger.LogDebug("Found live stream for event {EventId}: {StreamProvider} - {StreamParameter}", esportEvent.Match.Id, stream.Provider, stream.Parameter);
+
                                 if (stream.Provider == "twitch")
                                 {
                                     descriptionBuilder.Append($"<li><a href=\"https://www.twitch.tv/{stream.Parameter}\">Twitch ({stream.Parameter})</a></li>");
@@ -165,6 +166,7 @@ public class LolEsportsService(
 
                                 if (youtubeVod != null)
                                 {
+                                    logger.LogDebug("Found YouTube VOD for game {GameNumber} of event {EventId}: {VodParameter}", game.Number, esportEvent.Match.Id, youtubeVod.Parameter);
                                     youtubeVods.Add((game, youtubeVod));
                                 }
 
@@ -174,6 +176,7 @@ public class LolEsportsService(
 
                                 if (twitchVod != null)
                                 {
+                                    logger.LogDebug("Found Twitch VOD for game {GameNumber} of event {EventId}: {VodParameter}", game.Number, esportEvent.Match.Id, twitchVod.Parameter);
                                     twitchVods.Add((game, twitchVod));
                                 }
                             }
