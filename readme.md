@@ -1,3 +1,5 @@
+
+
 # Public Google Calendars
 Click one of the links below to integrate the calendar in your own.
 
@@ -69,6 +71,12 @@ Click one of the links below to integrate the calendar in your own.
 - [LES](https://calendar.google.com/calendar/u/0?cid=YjkwMzgyMTAwYjViYjVlYTQ1ZmVmMmVlNWVmMDdkZjQ0MWNmOGY5N2JhOTU0YmJhNDg5ZjRjMzI5MGJjNTNiOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t)
 - [PG Nationals](https://calendar.google.com/calendar/u/0?cid=ZDF0NGhyamZnZnA2YzJsbTk3OTZncmRnYXNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
 - [Ultraliga](https://calendar.google.com/calendar/u/0?cid=NDVoYjdzMms5bnRmdjRyamJqMmtnNzhoYW9AZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ)
+
+## Self-Host
+If you'd like to run this service locally to track custom leagues:
+1. Follow the [Google Calendar .NET Quickstart](https://developers.google.com/calendar/api/quickstart/dotnet#step_2_set_up_the_sample) to generate a `credentials.json` file.
+2. Configure your `appsettings.json` with a valid LoL Esports API key and your desired leagues.
+3. Run the application: `dotnet run --project LolEsportsCalendar`
 
 # Support
 Let [me know](https://github.com/ArnoutPullen/LolEsportsCalendar/issues/new?title=Feature%20Request:%20New%20Calendar) if you would like to see more calendars.
