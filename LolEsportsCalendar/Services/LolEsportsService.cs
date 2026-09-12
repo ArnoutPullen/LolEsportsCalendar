@@ -133,7 +133,7 @@ public class LolEsportsService(
                                 }
                                 else
                                 {
-                                    logger.LogError("Unknown stream provider {StreamProvider} for event {EventId}", stream.Provider, esportEvent.Match.Id);
+                                    logger.LogWarning("Unknown stream provider {StreamProvider} for event {EventId}", stream.Provider, esportEvent.Match.Id);
                                 }
                             }
                             descriptionBuilder.Append("</ul>");
