@@ -103,7 +103,7 @@ public class LolEsportsService(
                 {
                     if (null == esportEvent.Match?.Id)
                     {
-                        logger.LogError("Error esport event.match.id null");
+                        logger.LogWarning("Error esport event.match.id null");
                         continue;
                     }
 
@@ -308,6 +308,7 @@ public class LolEsportsService(
             logger.LogInformation("Creating new calendar {LeagueName}", league.Name);
             Calendar newCalendar = ConvertLeagueToCalendar(league);
             Calendar calendar = await calendarsService.InsertAsync(newCalendar, cancellationToken);
+            logger.LogInformation("Created new calendar {LeagueName} with id {CalendarId}", league.Name, calendar.Id);
             lolEsportsClient.ClearLeaguesCache();
 
             return calendar;
